@@ -53,7 +53,7 @@ for r in pokemon:
     type_species_by_id[r['id']]=r['species_id']
 for r in pokemon_types:
     pid=r['pokemon_id']
-    types_by_pokemon.setdefault(pid,[]).append((int(r['slot']),type_names.get(r['type_id'],r['type_id'])))
+    types_by_pokemon.setdefault(pid,[]).append((int(r['slot']),type_names.get(r['type_id'],r['egg_group_id'])))
 for k in types_by_pokemon:
     types_by_pokemon[k]=[x[1] for x in sorted(types_by_pokemon[k])]
 
