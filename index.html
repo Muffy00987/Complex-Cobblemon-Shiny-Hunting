@@ -1,111 +1,489 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cobblemon Shiny Hunting – Complete</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cobblemon Shiny Hunting – Interactive Reference</title>
 <style>
-body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f4f6f8;color:#1f2937}
-header{background:#202938;color:#fff;padding:22px 26px;position:sticky;top:0;z-index:10}
-h1{margin:0 0 6px}.sub{opacity:.85}
-main{padding:20px;max-width:1900px;margin:auto}.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:18px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
-input{width:100%;box-sizing:border-box;padding:11px;border:1px solid #cbd5e1;border-radius:7px;font-size:15px}
-.table-wrap{overflow:auto;max-height:72vh;border:1px solid #ddd;border-radius:8px}
-table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:7px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:top}
-th{position:sticky;top:0;background:#eef2f7;z-index:2}.badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#e5e7eb;margin:2px;font-weight:700}
-.small{font-size:13px;color:#4b5563}.status{font-weight:700}a{color:#2563eb}
+:root{
+  --bg:#07111f;--panel:#101c2e;--panel2:#142238;--line:#263851;--text:#f4f7fb;--muted:#aeb9c9;
+  --blue:#3976ee;--blue2:#2d5fd1;--gold:#f7bd22;--danger:#ffcc4d;--good:#58d68d;
+  --shadow:0 12px 35px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 50% -20%,#172942 0,#07111f 46%,#050c16 100%);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{padding:20px 28px 0;border-bottom:1px solid var(--line);background:rgba(7,17,31,.96);position:sticky;top:0;z-index:30;backdrop-filter:blur(10px)}
+.headrow{display:flex;justify-content:space-between;gap:22px;align-items:flex-start;max-width:1900px;margin:auto}
+.brand{display:flex;gap:16px;align-items:center;min-width:0}
+.ball{font-size:45px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
+h1{margin:0;font-size:32px;line-height:1.15;letter-spacing:-.6px;font-weight:900}
+.brandline{font-size:16px;color:#dce5f2;margin-top:8px}
+.statusbox{min-width:290px;border:1px solid var(--line);background:linear-gradient(135deg,#101d31,#0c1728);border-radius:12px;padding:14px 18px;box-shadow:var(--shadow)}
+.statusbox .dot{color:#5ee58e}.statusbox b{color:#5ee58e}.statusbox small{display:block;color:var(--muted);margin-top:7px}
+nav{display:flex;gap:0;margin-top:18px;max-width:1900px;margin-left:auto;margin-right:auto}
+.tab{background:transparent;color:#dce4ef;border:0;border-right:1px solid rgba(38,56,81,.6);padding:15px 28px;font-weight:800;font-size:17px}
+.tab:first-child{border-left:1px solid rgba(38,56,81,.6);border-radius:10px 0 0 0}
+.tab.active{background:linear-gradient(135deg,#3b73e8,#2d5fd1);color:#fff;box-shadow:0 7px 20px rgba(45,95,209,.3)}
+main{max-width:1900px;margin:auto;padding:18px 20px 50px}
+.card{background:linear-gradient(135deg,rgba(18,31,50,.98),rgba(12,23,39,.98));border:1px solid var(--line);border-radius:11px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
+.card h2{margin:0 0 12px;font-size:21px}
+.card h3{margin:0 0 8px}
+.disclaimer{border-left:5px solid var(--gold)}
+.disclaimer h2{color:var(--gold)}
+.guidegrid{display:grid;grid-template-columns:repeat(6,1fr);gap:22px;margin-top:18px}
+.guideitem b{font-size:16px}.guideitem p{color:var(--muted);line-height:1.45;margin:7px 0 0}
+.icon{font-size:25px;margin-right:8px}
+.small{color:var(--muted);font-size:13px;line-height:1.5}
+.filters{display:grid;grid-template-columns:2fr 1.1fr 1.1fr 1.1fr auto;gap:12px;align-items:end}
+label{display:block;color:#e4ebf4;font-weight:700;font-size:13px;margin:0 0 6px}
+input,select{width:100%;background:#07111f;color:#edf3fb;border:1px solid #30425d;border-radius:6px;padding:10px 12px;outline:none}
+input:focus,select:focus{border-color:#4b83ef;box-shadow:0 0 0 2px rgba(75,131,239,.14)}
+.btn{border:1px solid #36547e;background:#1b2c48;color:#fff;border-radius:6px;padding:10px 14px;font-weight:800}
+.btn.primary{background:linear-gradient(135deg,#3d78ee,#2d5fd1);border-color:#467cf0}
+.btn.ghost{background:#121e31}
+.btn.gold{background:#6c5210;border-color:#a9821c;color:#fff2bd}
+.btn.danger{background:#391b20;border-color:#6e3038}
+.btn:hover{filter:brightness(1.1)}
+.table-wrap{overflow:auto;max-height:67vh;border:1px solid #20324b;border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:1150px}
+th,td{padding:11px 12px;border-bottom:1px solid #1f3048;text-align:left;vertical-align:middle}
+th{position:sticky;top:0;background:#0c1829;z-index:2;white-space:nowrap}
+th.sortable{cursor:pointer}
+th.sortable:hover{background:#12223a}
+tr.data-row:hover{background:rgba(57,118,238,.08)}
+.biome-row td{background:#0b1728;color:#e6edf7;font-weight:900;font-size:14px}
+.poke-img{width:42px;height:42px;object-fit:contain;vertical-align:middle;margin-right:8px;image-rendering:auto}.modal-poke-img{width:110px;height:110px;object-fit:contain}.variant-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:10px}.variant-card{background:#0b1727;border:1px solid var(--line);border-radius:9px;padding:10px;text-align:center}.variant-card img{width:90px;height:90px;object-fit:contain}.shiny-row{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap}.shiny-card{text-align:center}.shiny-card img{width:115px;height:115px;object-fit:contain}.badge{display:inline-block;border-radius:6px;padding:5px 9px;font-size:12px;font-weight:900;background:#344155}
+.badge.common{background:#394454}.badge.uncommon{background:#4b5d2e}.badge.rare{background:#2357a5}.badge.ultra-rare{background:#5b2da2}
+.type{display:inline-block;padding:5px 9px;border-radius:5px;font-size:11px;font-weight:900;margin:2px;background:#3147b5}
+.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#1e304b;color:#dce7f6;font-size:12px;font-weight:700;margin:2px}
+.pill.target{background:#173f3b;color:#83e3cb}.pill.gold{background:#4a3911;color:#ffd96b}
+.muted{color:var(--muted)}
+.hidden{display:none!important}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.buildergrid{display:grid;grid-template-columns:430px 1fr;gap:16px}
+.sticky{position:sticky;top:145px;align-self:start}
+.slotgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.slot{border:1px solid var(--line);border-radius:9px;padding:12px;background:#0b1727}
+.slot-title{font-weight:900;margin-bottom:7px}
+.effectgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px}
+.effect{border:1px solid var(--line);border-radius:8px;padding:12px;background:#0b1727}
+.effect b{font-size:18px;display:block;margin-bottom:4px}
+.recipebox{border:1px solid #2d4e7d;border-radius:10px;padding:15px;background:linear-gradient(135deg,#10213a,#0b1727)}
+.ingredient{display:inline-flex;align-items:center;gap:6px;margin:4px 6px 4px 0;padding:7px 10px;border-radius:7px;background:#172945;border:1px solid #294567;font-weight:800}
+.recipebox .ingredient.gold{border-color:#846a20;background:#30260e;color:#ffe08a}
+.seasoning-tools{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px}
+.seasoning-row{cursor:pointer}
+.seasoning-row:hover{background:rgba(57,118,238,.08)}
+.details{margin-top:14px;border:1px solid var(--line);border-radius:9px;background:#0b1727;padding:14px}
+.accordion{border:1px solid var(--line);border-radius:8px;margin-bottom:9px;overflow:hidden}
+.accordion button{width:100%;text-align:left;background:#0d192b;color:#fff;border:0;padding:14px;font-weight:900}
+.accordion .body{padding:14px;background:#0a1525;color:#c8d3e1;line-height:1.6}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:20px;z-index:100}
+.modalbox{width:min(760px,100%);max-height:85vh;overflow:auto;background:#0d192b;border:1px solid #314866;border-radius:12px;padding:22px;box-shadow:0 25px 80px rgba(0,0,0,.5)}
+.modalhead{display:flex;justify-content:space-between;gap:15px;align-items:center}
+.close{border:0;background:#1a2a42;color:#fff;border-radius:6px;padding:8px 12px;font-weight:900}
+@media(max-width:1200px){.guidegrid{grid-template-columns:repeat(3,1fr)}.buildergrid{grid-template-columns:1fr}.sticky{position:static}.filters{grid-template-columns:1fr 1fr}.statusbox{min-width:230px}}
+@media(max-width:720px){header{padding:15px 12px 0}.headrow{display:block}.statusbox{margin-top:12px}.brandline{font-size:14px}h1{font-size:24px}.tab{padding:12px 10px;font-size:13px}main{padding:12px}.guidegrid{grid-template-columns:1fr 1fr}.filters,.grid2,.seasoning-tools{grid-template-columns:1fr}.slotgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><h1>🍖 Cobblemon Shiny Hunting – Complete Reference</h1><div class="sub">No Enchanted Golden Apples • Biome-grouped complete public spawn table • Chrome-friendly</div></header>
+<header>
+  <div class="headrow">
+    <div class="brand">
+      <div class="ball">🔴</div>
+      <div>
+        <h1><span style="color:#ff4b45">COBBLEMON</span> <span style="color:#ffd32a">SHINY</span> <span style="color:#54e34d">HUNTING</span> <span style="color:#fff">–</span> <span style="color:#b95cff">INTERACTIVE</span> <span style="color:#fff">REFERENCE</span></h1>
+        <div class="brandline">Biome-grouped public spawn list • Interactive Poké Snack / Poké Bait recipe builder • Auto-updating data</div>
+        <div class="brandline"><span style="color:#ffd34f;font-weight:800">Includes Enchanted Golden Apples as an optional choice — not prioritized</span></div>
+      </div>
+    </div>
+    <div class="statusbox"><b>● DATA STATUS</b><strong id="dataStatus">Checking embedded data…</strong><small id="dataUpdated"></small></div>
+  </div>
+  <nav>
+    <button class="tab active" data-tab="list">🌍 Spawn List</button>
+    <button class="tab" data-tab="builder">🧪 Recipe Builder</button>
+    <button class="tab" data-tab="seasonings">🍓 Seasonings</button>
+    <button class="tab" data-tab="about">ℹ️ About & Disclaimer</button>
+  </nav>
+</header>
+
 <main>
-<div class="card">
-<h2>Recipes</h2>
-<p><b>⭐ Shiny + Rarity:</b> Starf Berry + Golden Carrot + target Type/Egg-Group bait</p>
-<p><b>✨ Maximum Shiny:</b> Starf Berry + Starf Berry + target Type/Egg-Group bait</p>
-<p><b>👑 Maximum Rarity:</b> Golden Carrot + Golden Carrot + Golden Carrot</p>
-<p><b>🎯 Maximum Type/Egg Attraction:</b> 3× matching type/egg-group bait</p>
-<p class="small">Starf gives a 5× shiny modifier and Golden Carrot gives +1 rarity tier; matching bait provides a 10× attraction effect and same-effect seasonings stack. <a href="https://wiki.cobblemon.com/index.php/Seasoning" target="_blank">Cobblemon seasoning reference</a>.</p>
-</div>
-<div class="card">
-<div id="status" class="status">Loading the complete public spawn table…</div>
-<p class="small">Source: <a href="https://raw.githubusercontent.com/hspahic-cs/cobblemon-server/main/docs/spawn-lookup.md" target="_blank">public spawn lookup</a>. These are base/public rows and may not match Complex Cobblemon's custom server pool.</p>
-<input id="search" placeholder="Search Pokémon, biome, rarity, type, egg group, or recipe…">
-</div>
-<div class="card"><div class="table-wrap"><table id="spawn"><thead><tr>
-<th>Pokémon</th><th>Rarity</th><th>Biome</th><th>Type</th><th>Egg Group(s)</th><th>Shiny + Rarity</th><th>Max Rarity</th><th>Type / Egg Recipe</th>
-</tr></thead><tbody></tbody></table></div></div>
-<div class="card small"><b>Important:</b> The HTML list is live-loaded so it can include every species represented in the linked public spawn table. Pokémon outside that spawn table will not appear as spawn targets.</div>
+<section id="tab-list">
+  <div class="card disclaimer">
+    <h2>⚠️ Complex Cobblemon Limitation / Disclaimer</h2>
+    <div>This reference uses the public/base Cobblemon spawn data available to the updater. Complex Cobblemon may use custom spawn pools, server-side datapacks, disabled Pokémon, altered rarity weights, altered biome conditions, or other server-specific changes. Because those private/server-side changes are not publicly exposed in a complete machine-readable list, <b>this page cannot guarantee that every listed spawn, rarity, biome, or encounter rate matches Complex Cobblemon exactly.</b></div>
+    <div style="margin-top:8px">Use this as a helpful general guide, but always verify in-game for the most accurate information.</div>
+  </div>
+
+  <div class="card">
+    <h2>📘 How to Use This List</h2>
+    <div>Find a Pokémon, then click <b>Build Recipe</b> to create the best Poké Snack or Poké Bait for your goal.</div>
+    <div class="guidegrid">
+      <div class="guideitem"><b>⭐ Shiny + Rarity</b><p>Best overall for shiny chance and finding rarer spawns.</p></div>
+      <div class="guideitem"><b>✨ Max Shiny + Target</b><p>Maximize shiny odds while strongly attracting the target.</p></div>
+      <div class="guideitem"><b>🎯 Max Target Attraction</b><p>Prioritize attracting the target as often as possible.</p></div>
+      <div class="guideitem"><b>👑 Max Rarity</b><p>Focus on increasing the chance of rarer Pokémon.</p></div>
+      <div class="guideitem"><b>⚡ Faster Bites</b><p>Speeds up bite rate and reel-in time.</p></div>
+      <div class="guideitem"><b>⬆️ Higher Lured Level</b><p>Increases the level of the lured Pokémon.</p></div>
+    </div>
+    <p class="small" style="margin-top:18px">You can customize any recipe by changing the three seasoning slots. <span style="color:#ffd34f;font-weight:800">Enchanted Golden Apples</span> are available as an option, but the automatic recommendations will favor ordinary ingredients unless the apple is specifically chosen.</p>
+  </div>
+
+  <div class="card">
+    <div id="status" class="small" style="font-weight:800;margin-bottom:12px">Loading…</div>
+    <div class="filters">
+      <div><label for="search">Search Pokémon</label><input id="search" placeholder="Search by name, type, egg group, or biome…"></div>
+      <div><label for="biomeFilter">Filter by Biome</label><select id="biomeFilter"><option value="">All Biomes</option></select></div>
+      <div><label for="rarityFilter">Filter by Rarity</label><select id="rarityFilter"><option value="">All Rarities</option><option>common</option><option>uncommon</option><option>rare</option><option>ultra-rare</option></select></div>
+      <div><label for="typeFilter">Filter by Type</label><select id="typeFilter"><option value="">All Types</option></select></div>
+      <button class="btn" id="clearFilters">⟳ Clear Filters</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0">
+    <div class="table-wrap">
+      <table id="spawn">
+        <thead><tr>
+          <th class="sortable" data-sort="name">Pokémon ↕</th>
+          <th class="sortable" data-sort="rarity">Rarity ↕</th>
+          <th class="sortable" data-sort="biomes">Biome(s) ↕</th>
+          <th>Type(s)</th><th>Egg Group(s)</th><th>Best Target Ingredients</th><th>Build Recipe</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="tab-builder" class="hidden">
+  <div class="buildergrid">
+    <div class="card sticky">
+      <h2>🧪 Interactive Recipe Builder</h2>
+      <p class="small">Pick a Pokémon and a goal. The builder recommends a recipe, but every slot can be changed manually.</p>
+      <label for="pokeSelect">Pokémon</label><select id="pokeSelect"></select>
+      <div style="height:10px"></div>
+      <label for="goalSelect">Recipe Goal</label>
+      <select id="goalSelect">
+        <option value="balanced">⭐ Shiny + Rarity + Target</option>
+        <option value="maxshiny">✨ Maximum Shiny + Target</option>
+        <option value="target">🎯 Maximum Target Attraction</option>
+        <option value="rarity">👑 Maximum Rarity</option>
+        <option value="fast">⚡ Faster Bites / Reel-ins</option>
+        <option value="level">⬆️ Higher Lured Level</option>
+        <option value="custom">🛠 Custom</option>
+      </select>
+      <div style="height:10px"></div>
+      <label for="itemMode">Make This As</label><select id="itemMode"><option value="snack">Poké Snack</option><option value="bait">Poké Bait</option></select>
+      <div id="selectedInfo" class="details">Select a Pokémon.</div>
+      <div id="targetOptions" class="details"></div>
+      <h3 style="margin-top:16px">Seasoning Slots</h3>
+      <div id="slots" class="slotgrid"></div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary" id="applyGoal">Apply Goal</button>
+        <button class="btn" id="clearSlots">Clear Slots</button>
+      </div>
+    </div>
+    <div>
+      <div class="card"><h2>📋 Recipe</h2><div id="recipeOutput"></div></div>
+      <div class="card"><h2>📊 Combined Effects</h2><div id="effects" class="effectgrid"></div></div>
+      <div class="card"><h2>💡 Best Ingredients for This Pokémon</h2><div id="bestIngredients"></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="tab-seasonings" class="hidden">
+  <div class="card">
+    <h2>🍓 Seasoning Reference</h2>
+    <p class="small">Search or filter the full seasoning list. Click any seasoning for details, or use it directly in the Recipe Builder.</p>
+    <div class="seasoning-tools">
+      <input id="seasoningSearch" placeholder="Search seasoning or effect…">
+      <select id="seasoningFilter"><option value="">All Effects</option><option value="shiny">Shiny</option><option value="rarity">Rarity</option><option value="target">Type / Egg Group</option><option value="bite">Bite / Reel</option><option value="level">Lured Level</option><option value="special">Other</option></select>
+    </div>
+    <div class="table-wrap" style="max-height:68vh">
+      <table><thead><tr><th>Seasoning</th><th>Effect</th><th>Useful For</th><th></th></tr></thead><tbody id="seasoningTable"></tbody></table>
+    </div>
+    <div id="seasoningDetails" class="details hidden"></div>
+  </div>
+</section>
+
+<section id="tab-about" class="hidden">
+  <div class="card">
+    <h2>ℹ️ About This Reference</h2>
+    <div class="accordion"><button data-acc="how">How the reference works ▾</button><div id="acc-how" class="body hidden">The spawn table is embedded into the website so the page does not need to make live browser requests for every lookup. A GitHub Actions updater can regenerate the embedded database from the public/base source on its schedule, then GitHub Pages republishes the updated site.</div></div>
+    <div class="accordion"><button data-acc="recipes">How recipes work ▾</button><div id="acc-recipes" class="body hidden">The Recipe Builder combines three seasoning slots and totals their effects. Same-effect seasonings can stack. The recommended shiny recipe favors Starf Berry, rarity uses Golden Carrot or Glistering Melon Slice, and target recipes use matching type or egg-group bait. Enchanted Golden Apple is available manually, but it is not treated as the default priority.</div></div>
+    <div class="accordion"><button data-acc="rarity">Rarity & spawn data ▾</button><div id="acc-rarity" class="body hidden">The listed rarity labels come from the public/base spawn data used by the updater. Complex Cobblemon can change rarity weights, disable species, add custom conditions, or otherwise modify server-side spawning.</div></div>
+    <div class="accordion"><button data-acc="complex">Why Complex may differ ▾</button><div id="acc-complex" class="body hidden">Complex Cobblemon is a server environment and may have private or server-side configuration that is not exposed in a complete public machine-readable spawn list. That means this reference is useful for planning, but in-game information should be treated as the final authority for Complex-specific behavior.</div></div>
+    <div class="accordion"><button data-acc="updates">Automatic updates ▾</button><div id="acc-updates" class="body hidden">The updater is designed to run through GitHub Actions. Scheduled workflows can be delayed by GitHub, so the update time is approximate rather than guaranteed to occur at an exact minute.</div></div>
+  </div>
+  <div class="card disclaimer">
+    <h2>⚠️ Complex Cobblemon Limitation / Disclaimer</h2>
+    <p>This page does <b>not</b> claim to have access to Complex's private server configuration. Its spawn reference is based on public/base Cobblemon data. Complex may have custom spawn pools, altered rarities, disabled Pokémon, changed biome conditions, datapacks, or other server-specific settings.</p>
+    <p><b>Always verify important spawn information in-game on Complex Cobblemon.</b></p>
+  </div>
+  <div class="card">
+    <h2>🔄 Changelog</h2>
+    <ul class="small">
+      <li>Interactive spawn search, biome/rarity/type filters, sorting, and Pokémon detail view.</li>
+      <li>Recipe Builder with goal presets, editable seasoning slots, stacking calculations, and optional Enchanted Golden Apple.</li>
+      <li>Interactive Seasonings reference with search, effect filters, details, and “Use in Recipe”.</li>
+      <li>Interactive About & Disclaimer sections.</li>
+      <li>Embedded-data architecture prepared for automatic GitHub Actions updates.</li>
+    </ul>
+  </div>
+</section>
 </main>
+
+<div id="modal" class="modal hidden"><div class="modalbox"><div class="modalhead"><h2 id="modalTitle">Pokémon</h2><button class="close" id="modalClose">✕</button></div><div id="modalBody"></div></div></div>
+
+<script src="data/spawn-data.js"></script>
 <script>
-const SOURCE="https://raw.githubusercontent.com/hspahic-cs/cobblemon-server/main/docs/spawn-lookup.md";
-const TYPE_BAIT={Bug:"Spelon Berry",Dark:"Colbur Berry",Dragon:"Haban Berry",Electric:"Wacan Berry",Fairy:"Roseli Berry",Fighting:"Chople Berry",Fire:"Occa Berry",Flying:"Coba Berry",Ghost:"Kasib Berry",Grass:"Rindo Berry",Ground:"Shuca Berry",Ice:"Yache Berry",Normal:"Chilan Berry",Poison:"Kebia Berry",Psychic:"Payapa Berry",Rock:"Charti Berry",Steel:"Babiri Berry",Water:"Passho Berry"};
+const TYPE_BAIT={Bug:"Tanga Berry",Dark:"Colbur Berry",Dragon:"Haban Berry",Electric:"Wacan Berry",Fairy:"Roseli Berry",Fighting:"Chople Berry",Fire:"Occa Berry",Flying:"Coba Berry",Ghost:"Kasib Berry",Grass:"Rindo Berry",Ground:"Shuca Berry",Ice:"Yache Berry",Normal:"Chilan Berry",Poison:"Kebia Berry",Psychic:"Payapa Berry",Rock:"Charti Berry",Steel:"Babiri Berry",Water:"Passho Berry"};
 const EGG_BAIT={"dragon":"Lum Berry","monster":"Lum Berry","field":"Rawst Berry","human-like":"Chesto Berry","flying":"Chesto Berry","water 3":"Pecha Berry","bug":"Pecha Berry","fairy":"Cheri Berry","grass":"Cheri Berry","water 1":"Aspear Berry","water 2":"Aspear Berry","mineral":"Persim Berry","amorphous":"Persim Berry"};
-function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
-function parseRows(text){
- const doc=new DOMParser().parseFromString(text,"text/html");
- return [...doc.querySelectorAll("tr")].map(r=>[...r.querySelectorAll("td")].map(x=>x.textContent.trim()))
- .filter(c=>c.length===3).map(c=>({name:c[0],rarity:c[1],biomes:c[2]}));
+const SEASONINGS={
+"Glistering Melon Slice":{rarity:1,desc:"+1 rarity tier",cat:"rarity"},
+"Golden Carrot":{rarity:1,desc:"+1 rarity tier",cat:"rarity"},
+"Starf Berry":{shiny:5,desc:"5× shiny chance",cat:"shiny"},
+"Enigma Berry":{ability:5,desc:"5% chance to attract Hidden Ability Pokémon",cat:"special"},
+"Sweet Berries":{bite:12.5,desc:"12.5% shorter bite time",cat:"bite"},
+"Glow Berries":{bite:25,desc:"25% shorter bite time",cat:"bite"},
+"Custap Berry":{bite:25,reel:1,desc:"25% shorter bite time; increased reel chance",cat:"bite"},
+"Micle Berry":{bite:25,reel:1,desc:"25% shorter bite time; increased reel chance",cat:"bite"},
+"Oran Berry":{bite:33,desc:"33% shorter bite time",cat:"bite"},
+"Apple":{bite:50,desc:"50% shorter bite time",cat:"bite"},
+"Sitrus Berry":{bite:50,desc:"50% shorter bite time",cat:"bite"},
+"Leppa Berry":{level:5,desc:"+5 lured level",cat:"level"},
+"Hopo Berry":{level:10,desc:"+10 lured level",cat:"level"},
+"Jaboca Berry":{friendship:100,desc:"+100 friendship",cat:"special"},
+"Rowap Berry":{drops:1,desc:"Rerolls drops",cat:"special"},
+"Enchanted Golden Apple":{special:1,desc:"Optional premium seasoning; available manually but intentionally not prioritized by automatic recipes",cat:"special",gold:true},
+"Tanga Berry":{type:["bug"],desc:"Attracts Bug-type Pokémon",cat:"target"},
+"Colbur Berry":{type:["dark"],desc:"Attracts Dark-type Pokémon",cat:"target"},
+"Haban Berry":{type:["dragon"],desc:"Attracts Dragon-type Pokémon",cat:"target"},
+"Wacan Berry":{type:["electric"],desc:"Attracts Electric-type Pokémon",cat:"target"},
+"Roseli Berry":{type:["fairy"],desc:"Attracts Fairy-type Pokémon",cat:"target"},
+"Chople Berry":{type:["fighting"],desc:"Attracts Fighting-type Pokémon",cat:"target"},
+"Occa Berry":{type:["fire"],desc:"Attracts Fire-type Pokémon",cat:"target"},
+"Coba Berry":{type:["flying"],desc:"Attracts Flying-type Pokémon",cat:"target"},
+"Kasib Berry":{type:["ghost"],desc:"Attracts Ghost-type Pokémon",cat:"target"},
+"Rindo Berry":{type:["grass"],desc:"Attracts Grass-type Pokémon",cat:"target"},
+"Shuca Berry":{type:["ground"],desc:"Attracts Ground-type Pokémon",cat:"target"},
+"Yache Berry":{type:["ice"],desc:"Attracts Ice-type Pokémon",cat:"target"},
+"Chilan Berry":{type:["normal"],desc:"Attracts Normal-type Pokémon",cat:"target"},
+"Kebia Berry":{type:["poison"],desc:"Attracts Poison-type Pokémon",cat:"target"},
+"Payapa Berry":{type:["psychic"],desc:"Attracts Psychic-type Pokémon",cat:"target"},
+"Charti Berry":{type:["rock"],desc:"Attracts Rock-type Pokémon",cat:"target"},
+"Babiri Berry":{type:["steel"],desc:"Attracts Steel-type Pokémon",cat:"target"},
+"Passho Berry":{type:["water"],desc:"Attracts Water-type Pokémon",cat:"target"},
+"Lum Berry":{egg:["dragon","monster"],desc:"Attracts Dragon + Monster egg groups",cat:"target"},
+"Pecha Berry":{egg:["water 3","bug"],desc:"Attracts Water 3 + Bug egg groups",cat:"target"},
+"Cheri Berry":{egg:["fairy","grass"],desc:"Attracts Fairy + Grass egg groups",cat:"target"},
+"Chesto Berry":{egg:["human-like","flying"],desc:"Attracts Human-Like + Flying egg groups",cat:"target"},
+"Rawst Berry":{egg:["field"],desc:"Attracts Field egg group",cat:"target"},
+"Aspear Berry":{egg:["water 1","water 2"],desc:"Attracts Water 1 + Water 2 egg groups",cat:"target"},
+"Persim Berry":{egg:["mineral","amorphous"],desc:"Attracts Mineral + Amorphous egg groups",cat:"target"},
+"Razz Berry":{nature:["attack"],desc:"Attack nature attraction (25)",cat:"special"},
+"Figy Berry":{nature:["attack"],desc:"Attack nature attraction (50)",cat:"special"},
+"Touga Berry":{nature:["attack"],desc:"Attack nature attraction (75)",cat:"special"},
+"Spelon Berry":{nature:["attack"],desc:"Attack nature attraction (100)",cat:"special"},
+"Pinap Berry":{nature:["defense"],desc:"Defense nature attraction (25)",cat:"special"},
+"Iapapa Berry":{nature:["defense"],desc:"Defense nature attraction (50)",cat:"special"},
+"Nomel Berry":{nature:["defense"],desc:"Defense nature attraction (75)",cat:"special"},
+"Belue Berry":{nature:["defense"],desc:"Defense nature attraction (100)",cat:"special"},
+"Bluk Berry":{nature:["sp. atk"],desc:"Sp. Atk nature attraction (25)",cat:"special"},
+"Wiki Berry":{nature:["sp. atk"],desc:"Sp. Atk nature attraction (50)",cat:"special"},
+"Cornn Berry":{nature:["sp. atk"],desc:"Sp. Atk nature attraction (75)",cat:"special"},
+"Pamtre Berry":{nature:["sp. atk"],desc:"Sp. Atk nature attraction (100)",cat:"special"},
+"Wepear Berry":{nature:["sp. def"],desc:"Sp. Def nature attraction (25)",cat:"special"},
+"Aguav Berry":{nature:["sp. def"],desc:"Sp. Def nature attraction (50)",cat:"special"},
+"Rabuta Berry":{nature:["sp. def"],desc:"Sp. Def nature attraction (75)",cat:"special"},
+"Durin Berry":{nature:["sp. def"],desc:"Sp. Def nature attraction (100)",cat:"special"},
+"Nanab Berry":{nature:["speed"],desc:"Speed nature attraction (25)",cat:"special"},
+"Mago Berry":{nature:["speed"],desc:"Speed nature attraction (50)",cat:"special"},
+"Magost Berry":{nature:["speed"],desc:"Speed nature attraction (75)",cat:"special"},
+"Watmel Berry":{nature:["speed"],desc:"Speed nature attraction (100)",cat:"special"}
+};
+const names=Object.keys(SEASONINGS);
+let all=[],current=null,slots=[null,null,null],sortKey="name",sortAsc=true;
+
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+function spriteUrl(x, shiny=false){
+  const id=x.pokemon_id||x.id;
+  return id ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${shiny?'shiny/':''}${id}.png` : '';
 }
-async function getSpecies(name){
- let key=name.toLowerCase().replaceAll(" ","-").replaceAll("'","");
- try{
-  const p=await fetch("https://pokeapi.co/api/v2/pokemon/"+key).then(r=>r.ok?r.json():null);
-  const s=await fetch("https://pokeapi.co/api/v2/pokemon-species/"+key).then(r=>r.ok?r.json():null);
-  return {types:(p?.types||[]).sort((a,b)=>a.slot-b.slot).map(x=>x.type.name.replace(/^./,m=>m.toUpperCase())),groups:(s?.egg_groups||[]).map(x=>x.name.replaceAll("-"," ").replace(/^./,m=>m.toUpperCase()))};
- }catch(e){return {types:[],groups:[]};}
+function artworkUrl(id, shiny=false){
+  return id ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${shiny?'shiny/':''}${id}.png` : '';
 }
-function chooseBait(types,groups){
- for(const t of types) if(TYPE_BAIT[t]) return {bait:TYPE_BAIT[t],kind:"Type"};
- for(const g of groups){const k=g.toLowerCase();if(EGG_BAIT[k]) return {bait:EGG_BAIT[k],kind:"Egg Group"};}
- return {bait:"Matching bait",kind:"Type/Egg"};
+function formLabel(f){
+  const raw=(f.form_identifier||f.identifier||'').replace(/^'+"'"+'/, '').replace(/-/g,' ');
+  if(!raw || raw==='default') return 'Default';
+  return raw.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
 }
-async function main(){
- try{
-  const text=await fetch(SOURCE).then(r=>r.text());
-  const rows=parseRows(text), byName=new Map();
-  rows.forEach(r=>{if(!byName.has(r.name))byName.set(r.name,[]);byName.get(r.name).push(r);});
-  const names=[...byName.keys()], details=new Map();
-  document.getElementById("status").textContent=`Loaded ${rows.length} spawn rows for ${names.length} species. Adding recipe data…`;
-  for(let i=0;i<names.length;i+=12){
-   const vals=await Promise.all(names.slice(i,i+12).map(async n=>[n,await getSpecies(n)]));
-   vals.forEach(([n,d])=>details.set(n,d));
-   document.getElementById("status").textContent=`Loaded ${rows.length} spawn rows for ${names.length} species. Recipe data ${Math.min(i+12,names.length)}/${names.length}…`;
-  }
-  const all=[];
-  for(const [name,rs] of byName){
-   const d=details.get(name)||{types:[],groups:[]};
-   for(const r of rs) all.push({...r,...d});
-  }
-  const tbody=document.querySelector("#spawn tbody");
-  function render(q=""){
-   q=q.toLowerCase(); tbody.innerHTML="";
-   const matches=all.filter(x=>(x.name+" "+x.rarity+" "+x.biomes+" "+x.types.join(" ")+" "+x.groups.join(" ")).toLowerCase().includes(q));
-   const grouped=new Map();
-   matches.forEach(x=>{
-     x.biomes.split(",").map(b=>b.trim()).filter(Boolean).forEach(b=>{
-       if(!grouped.has(b)) grouped.set(b,[]);
-       grouped.get(b).push(x);
-     });
-   });
-   [...grouped.keys()].sort((a,b)=>a.localeCompare(b)).forEach(biome=>{
-     const heading=document.createElement("tr");
-     heading.innerHTML=`<td colspan="8" style="background:#dfe7f1;font-size:16px;font-weight:800;padding:10px;">🌍 ${esc(biome)} — ${grouped.get(biome).length} spawn entries</td>`;
-     tbody.appendChild(heading);
-     grouped.get(biome).sort((a,b)=>a.name.localeCompare(b.name)||a.rarity.localeCompare(b.rarity)).forEach(x=>{
-       const bait=chooseBait(x.types,x.groups);
-       const tr=document.createElement("tr");
-       tr.innerHTML=`<td><b>${esc(x.name)}</b></td><td><span class="badge">${esc(x.rarity)}</span></td><td>${esc(biome)}</td><td>${esc(x.types.join(" / ")||"—")}</td><td>${esc(x.groups.join(" / ")||"—")}</td><td>Starf Berry + Golden Carrot + <b>${esc(bait.bait)}</b></td><td>Golden Carrot + Golden Carrot + Golden Carrot</td><td>3× <b>${esc(bait.bait)}</b> (${esc(bait.kind)})</td>`;
-       tbody.appendChild(tr);
-     });
-   });
-  }
-  render(); document.getElementById("search").addEventListener("input",e=>render(e.target.value));
-  document.getElementById("status").textContent=`Complete: ${rows.length} spawn rows / ${names.length} species loaded.`;
- }catch(e){
-  document.getElementById("status").textContent="Could not load the live source. Check your internet connection and reload the page.";
-  console.error(e);
- }
+function targetBaits(x){
+  const out=[],types=(x.types||[]),groups=(x.groups||[]).map(g=>g.toLowerCase());
+  types.forEach(t=>{if(TYPE_BAIT[t])out.push({bait:TYPE_BAIT[t],reason:t+" type"});});
+  groups.forEach(g=>{if(EGG_BAIT[g]&&!out.some(o=>o.bait===EGG_BAIT[g]))out.push({bait:EGG_BAIT[g],reason:g+" egg group"});});
+  return out;
+}
+function matching(x,n){const e=SEASONINGS[n]||{},types=(x.types||[]).map(v=>v.toLowerCase()),groups=(x.groups||[]).map(v=>v.toLowerCase());return (e.type||[]).some(v=>types.includes(v))||(e.egg||[]).some(v=>groups.includes(v));}
+function preset(goal,x){
+  const t=targetBaits(x)[0]?.bait||"";
+  if(goal==="balanced")return ["Starf Berry","Golden Carrot",t||"Starf Berry"];
+  if(goal==="maxshiny")return ["Starf Berry","Starf Berry",t||"Starf Berry"];
+  if(goal==="target")return [t||"Starf Berry",t||"Starf Berry",t||"Starf Berry"];
+  if(goal==="rarity")return ["Golden Carrot","Golden Carrot","Golden Carrot"];
+  if(goal==="fast")return ["Apple","Apple","Sitrus Berry"];
+  if(goal==="level")return ["Hopo Berry","Hopo Berry","Hopo Berry"];
+  return slots;
+}
+function effectTotals(arr){
+  const t={shiny:1,rarity:0,bite:0,reel:0,level:0,ability:0,friendship:0,drops:0,special:0};
+  arr.filter(Boolean).forEach(n=>{const e=SEASONINGS[n]||{};Object.keys(t).forEach(k=>{if(e[k])t[k]+=e[k]});});
+  return t;
+}
+function showTab(tab){
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  document.querySelectorAll("section[id^=tab-]").forEach(s=>s.classList.toggle("hidden",s.id!=="tab-"+tab));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function renderTargetOptions(x){
+  const b=targetBaits(x);
+  document.getElementById("targetOptions").innerHTML=`<b>🎯 Matching Target Ingredients</b><div style="margin-top:7px">${b.length?b.map(o=>`<span class="pill target">${esc(o.bait)} — ${esc(o.reason)}</span>`).join(""):`<span class="muted">No mapped type/egg-group bait found.</span>`}</div>`;
+}
+function renderSelected(){
+  if(!current)return;
+  document.getElementById("selectedInfo").innerHTML=`<b style="font-size:18px">${esc(current.name)}</b><br><span class="muted">Type:</span> ${(current.types||[]).map(t=>`<span class="type">${esc(t)}</span>`).join(" ")||"Unknown"}<br><span class="muted">Egg Group(s):</span> ${esc((current.groups||[]).join(" / ")||"Unknown")}<br><span class="muted">Spawn rarity:</span> <b>${esc(current.rarity||"Multiple")}</b>`;
+  renderTargetOptions(current);renderSlots();renderOutputs();
+}
+function renderSlots(){
+  const el=document.getElementById("slots");
+  el.innerHTML=slots.map((n,i)=>`<div class="slot"><div class="slot-title">Slot ${i+1}</div><select data-slot="${i}"><option value="">— Empty —</option>${names.map(s=>`<option value="${esc(s)}" ${s===n?"selected":""}>${esc(s)}</option>`).join("")}</select>${n?`<div class="small" style="margin-top:7px">${esc(SEASONINGS[n].desc)}</div>`:""}</div>`).join("");
+  el.querySelectorAll("select").forEach(s=>s.addEventListener("change",e=>{slots[+e.target.dataset.slot]=e.target.value||null;document.getElementById("goalSelect").value="custom";renderSlots();renderOutputs();}));
+}
+function renderOutputs(){
+  if(!current)return;
+  const clean=slots.filter(Boolean),t=effectTotals(slots),mode=document.getElementById("itemMode").value,base=mode==="snack"?"Poké Snack":"Poké Bait";
+  const ingredients=slots.map(n=>n?`<span class="ingredient ${SEASONINGS[n].gold?"gold":""}">${esc(n)}</span>`:`<span class="ingredient">Empty Slot</span>`).join("");
+  document.getElementById("recipeOutput").innerHTML=`<div class="recipebox"><h3>${esc(base)}</h3><div style="margin:8px 0">${ingredients}</div><p><b>Target:</b> ${esc(current.name)}</p><p class="small">${clean.length===3?"Complete recipe ready.":"Choose all 3 seasoning slots for a complete recipe."}</p>${slots.includes("Enchanted Golden Apple")?`<p style="color:#ffd34f"><b>Optional Enchanted Golden Apple:</b> selected manually. It is available, but the recommendation system does not prioritize it.</p>`:""}</div>`;
+  const cards=[];
+  if(t.shiny!==1)cards.push(["Shiny",t.shiny+"×","Starf Berry effects stack multiplicatively"]);
+  if(t.rarity)cards.push(["Rarity","+"+t.rarity+" tier","Golden Carrot / Glistering Melon Slice"]);
+  if(t.bite)cards.push(["Bite time","-"+t.bite+"%","Shorter bite time"]);
+  if(t.reel)cards.push(["Reel chance","boosted","Custap / Micle"]);
+  if(t.level)cards.push(["Lured level","+"+t.level,"Leppa / Hopo"]);
+  if(t.ability)cards.push(["Hidden Ability",t.ability+"%","Enigma Berry"]);
+  if(t.friendship)cards.push(["Friendship","+"+t.friendship,"Jaboca Berry"]);
+  if(t.drops)cards.push(["Drops","rerolled","Rowap Berry"]);
+  const targetSlots=clean.filter(n=>matching(current,n));
+  cards.push(["Target attraction",targetSlots.length?targetSlots.join(" + "):"None selected","Matching type / egg-group bait"]);
+  document.getElementById("effects").innerHTML=cards.map(c=>`<div class="effect"><b>${esc(c[1])}</b>${esc(c[0])}<div class="small">${esc(c[2])}</div></div>`).join("");
+  document.getElementById("bestIngredients").innerHTML=`<div>${targetBaits(current).map(o=>`<span class="pill target">${esc(o.bait)} — ${esc(o.reason)}</span>`).join("")||"<span class=\"muted\">No matching target seasoning mapped.</span>"}</div><p class="small" style="margin-top:10px">For shiny hunting, the default recommendation is Starf Berry + Golden Carrot + a matching target seasoning. For maximum shiny, Starf Berry is stacked. For maximum rarity, Golden Carrot is stacked. Enchanted Golden Apple remains available manually but is not prioritized.</p>`;
+}
+function openBuilder(name,rarity){
+  const x=all.find(v=>v.name===name&&(!rarity||v.rarity===rarity))||all.find(v=>v.name===name);
+  if(!x)return;
+  current=x;document.getElementById("pokeSelect").value=x.name;slots=preset(document.getElementById("goalSelect").value,x);renderSelected();showTab("builder");
+}
+function openPokemon(x){
+  const forms=Array.isArray(x.forms)&&x.forms.length?x.forms:[{id:x.pokemon_id,identifier:'default',form_identifier:'default',is_default:true}];
+  const usable=forms.filter(f=>f.id);
+  document.getElementById("modalTitle").textContent=x.name;
+  document.getElementById("modalBody").innerHTML=`
+    <div class="details">
+      <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+        <img class="modal-poke-img" src="${artworkUrl(x.pokemon_id)||spriteUrl(x)}" alt="${esc(x.name)}" onerror="this.src='${spriteUrl(x)}'">
+        <div><h3 style="font-size:25px;margin:0 0 8px">${esc(x.name)}</h3><b>Rarity:</b> ${esc(x.rarity||"Multiple")}<br><b>Type(s):</b> ${(x.types||[]).map(t=>`<span class="type">${esc(t)}</span>`).join(" ")||"Unknown"}<br><b>Egg Group(s):</b> ${esc((x.groups||[]).join(", ")||"Unknown")}<br><b>Biome(s):</b> ${esc(x.biomes||"Unknown")}</div>
+      </div>
+      <hr style="border-color:#263851">
+      <h3>🎨 Color / Form Variants</h3>
+      <p class="small">These are the visual variants available for this species in the public PokeAPI sprite set. The public spawn table does not expose a complete list of which specific forms Complex Cobblemon allows, so these are shown as reference variants rather than a guarantee that every form spawns on Complex.</p>
+      <div class="variant-grid">${usable.map(f=>`<div class="variant-card"><img src="${artworkUrl(f.id)||spriteUrl({pokemon_id:f.id})}" alt="${esc(formLabel(f))}" loading="lazy" onerror="this.src='${spriteUrl({pokemon_id:f.id})}'"><b>${esc(formLabel(f))}</b><div class="small">${f.is_default?'Default form':'Alternate form'}</div></div>`).join("")}</div>
+      <h3 style="margin-top:18px">✨ Shiny Variant</h3>
+      <div class="shiny-row">${usable.map(f=>`<div class="shiny-card"><img src="${artworkUrl(f.id,true)||spriteUrl({pokemon_id:f.id},true)}" alt="Shiny ${esc(formLabel(f))}" loading="lazy" onerror="this.src='${spriteUrl({pokemon_id:f.id},true)}'"><div><b>Shiny — ${esc(formLabel(f))}</b></div></div>`).join("")}</div>
+      <hr style="border-color:#263851">
+      <b>Best target ingredients:</b><div style="margin-top:7px">${targetBaits(x).map(o=>`<span class="pill target">${esc(o.bait)} — ${esc(o.reason)}</span>`).join("")||"None mapped"}</div>
+      <div style="margin-top:16px"><button class="btn primary" id="modalBuild">🧪 Build Recipe for ${esc(x.name)}</button></div>
+    </div>`;
+  document.getElementById("modal").classList.remove("hidden");
+  document.getElementById("modalBuild").onclick=()=>{document.getElementById("modal").classList.add("hidden");openBuilder(x.name,x.rarity)};
+}
+function renderList(){
+  const q=document.getElementById("search").value.toLowerCase(),bf=document.getElementById("biomeFilter").value,rf=document.getElementById("rarityFilter").value,tf=document.getElementById("typeFilter").value;
+  let rows=all.filter(x=>{
+    const hay=`${x.name} ${x.rarity} ${x.biomes} ${(x.types||[]).join(" ")} ${(x.groups||[]).join(" ")}`.toLowerCase();
+    return (!q||hay.includes(q))&&(!bf||(x.biomes||"").split(",").map(s=>s.trim()).includes(bf))&&(!rf||x.rarity===rf)&&(!tf||(x.types||[]).includes(tf));
+  });
+  rows.sort((a,b)=>{let av=(a[sortKey]||"").toString().toLowerCase(),bv=(b[sortKey]||"").toString().toLowerCase();return (av>bv?1:av<bv?-1:0)*(sortAsc?1:-1)});
+  const body=document.querySelector("#spawn tbody");body.innerHTML="";
+  const grouped=new Map();rows.forEach(x=>{const bs=(x.biomes||"Unknown").split(",").map(b=>b.trim()).filter(Boolean);(bs.length?bs:["Unknown"]).forEach(b=>{if(!grouped.has(b))grouped.set(b,[]);grouped.get(b).push(x)})});
+  [...grouped.keys()].sort().forEach(b=>{
+    const h=document.createElement("tr");h.className="biome-row";h.innerHTML=`<td colspan="7">🌍 ${esc(b)} — ${grouped.get(b).length} spawn entries</td>`;body.appendChild(h);
+    grouped.get(b).forEach(x=>{
+      const tr=document.createElement("tr");tr.className="data-row";
+      const target=targetBaits(x),quick=target[0]?.bait||"Starf Berry";
+      tr.innerHTML=`<td><button class="btn ghost view" style="padding:5px 8px;font-weight:900;display:flex;align-items:center"><img class="poke-img" src="${spriteUrl(x)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>${esc(x.name)}</span></button></td><td><span class="badge ${esc(x.rarity)}">${esc(x.rarity)}</span></td><td>${esc(b)}</td><td>${(x.types||[]).map(t=>`<span class="type">${esc(t)}</span>`).join("")||"—"}</td><td>${esc((x.groups||[]).join(", ")||"—")}</td><td>${target.map(o=>`<span class="pill target">${esc(o.bait)}</span>`).join("")||"—"}</td><td><button class="btn primary build">🧪 Build Recipe</button></td>`;
+      tr.querySelector(".view").onclick=()=>openPokemon(x);
+      tr.querySelector(".build").onclick=()=>openBuilder(x.name,x.rarity);
+      body.appendChild(tr);
+    });
+  });
+  document.getElementById("status").textContent=`Showing ${rows.length.toLocaleString()} embedded spawn rows. Click a Pokémon name for details or Build Recipe to jump into the builder.`;
+}
+function fillFilters(){
+  const biomes=[...new Set(all.flatMap(x=>(x.biomes||"").split(",").map(s=>s.trim()).filter(Boolean)))].sort();
+  const types=[...new Set(all.flatMap(x=>x.types||[]))].sort();
+  document.getElementById("biomeFilter").innerHTML='<option value="">All Biomes</option>'+biomes.map(x=>`<option>${esc(x)}</option>`).join("");
+  document.getElementById("typeFilter").innerHTML='<option value="">All Types</option>'+types.map(x=>`<option>${esc(x)}</option>`).join("");
+}
+function fillSelect(){
+  const uniq=[...new Map(all.map(x=>[x.name,x])).values()].sort((a,b)=>a.name.localeCompare(b.name));
+  document.getElementById("pokeSelect").innerHTML=uniq.map(x=>`<option value="${esc(x.name)}">${esc(x.name)}</option>`).join("");
+}
+function renderSeasonings(){
+  const q=document.getElementById("seasoningSearch").value.toLowerCase(),f=document.getElementById("seasoningFilter").value;
+  const body=document.getElementById("seasoningTable");body.innerHTML="";
+  names.filter(n=>{const e=SEASONINGS[n],hay=(n+" "+e.desc).toLowerCase();return (!q||hay.includes(q))&&(!f||e.cat===f)}).forEach(n=>{
+    const e=SEASONINGS[n],tr=document.createElement("tr");tr.className="seasoning-row";
+    tr.innerHTML=`<td><b>${esc(n)}</b>${e.gold?` <span class="pill gold">Optional</span>`:""}</td><td>${esc(e.desc)}</td><td>${e.type?esc("Type: "+e.type.join(", ")):e.egg?esc("Egg: "+e.egg.join(", ")):e.shiny?"Shiny chance":e.rarity?"Rarity":e.bite?"Faster bites":e.level?"Lured level":"Special"}</td><td><button class="btn">Use in Recipe</button></td>`;
+    tr.querySelector("button").onclick=(ev)=>{ev.stopPropagation();if(!current){current=all[0];}slots[0]=n;showTab("builder");renderSelected()};
+    tr.onclick=()=>{const d=document.getElementById("seasoningDetails");d.classList.remove("hidden");d.innerHTML=`<b>${esc(n)}</b><br>${esc(e.desc)}<br><span class="small">Category: ${esc(e.cat)}${e.gold?" · Optional and not prioritized":""}</span>`};
+    body.appendChild(tr);
+  });
+}
+function setup(){
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+  ["search","biomeFilter","rarityFilter","typeFilter"].forEach(id=>document.getElementById(id).addEventListener(id==="search"?"input":"change",renderList));
+  document.getElementById("clearFilters").onclick=()=>{["search","biomeFilter","rarityFilter","typeFilter"].forEach(id=>document.getElementById(id).value="");renderList()};
+  document.querySelectorAll("th.sortable").forEach(th=>th.onclick=()=>{const k=th.dataset.sort;if(sortKey===k)sortAsc=!sortAsc;else{sortKey=k;sortAsc=true}renderList()});
+  document.getElementById("goalSelect").onchange=()=>{if(current&&document.getElementById("goalSelect").value!=="custom"){slots=preset(document.getElementById("goalSelect").value,current);renderSelected()}};
+  document.getElementById("applyGoal").onclick=()=>{if(current){slots=preset(document.getElementById("goalSelect").value,current);renderSelected()}};
+  document.getElementById("clearSlots").onclick=()=>{slots=[null,null,null];document.getElementById("goalSelect").value="custom";renderSelected()};
+  document.getElementById("itemMode").onchange=renderOutputs;
+  document.getElementById("pokeSelect").onchange=e=>{current=all.find(x=>x.name===e.target.value)||null;slots=preset(document.getElementById("goalSelect").value,current);renderSelected()};
+  document.getElementById("seasoningSearch").oninput=renderSeasonings;document.getElementById("seasoningFilter").onchange=renderSeasonings;
+  document.getElementById("modalClose").onclick=()=>document.getElementById("modal").classList.add("hidden");
+  document.getElementById("modal").onclick=e=>{if(e.target.id==="modal")document.getElementById("modal").classList.add("hidden")};
+  document.querySelectorAll(".accordion button").forEach(b=>b.onclick=()=>document.getElementById("acc-"+b.dataset.acc).classList.toggle("hidden"));
+}
+function main(){
+  setup();renderSeasonings();
+  try{
+    const rows=Array.isArray(window.COBBLEMON_SPAWN_DATA)?window.COBBLEMON_SPAWN_DATA:[];
+    all=rows.map(r=>({...r,types:r.types||[],groups:r.groups||[]}));
+    if(!all.length){
+      document.getElementById("dataStatus").textContent="Waiting for embedded data";
+      document.getElementById("dataUpdated").textContent="The automatic updater will populate the database.";
+      document.getElementById("status").textContent="The automatic updater is preparing the embedded spawn database. Refresh after the first GitHub Actions update finishes.";
+      return;
+    }
+    fillFilters();fillSelect();current=all.find(x=>x.name==="Charmander")||all[0];slots=preset("balanced",current);renderSelected();renderList();
+    const species=new Set(all.map(x=>x.name)).size,stamp=window.COBBLEMON_SPAWN_META?.updated_utc?new Date(window.COBBLEMON_SPAWN_META.updated_utc).toLocaleString():"unknown";
+    document.getElementById("dataStatus").textContent="Up to date";document.getElementById("dataUpdated").textContent=`${species.toLocaleString()} species • Last updated: ${stamp}`;
+  }catch(err){console.error(err);document.getElementById("dataStatus").textContent="Data error";document.getElementById("dataUpdated").textContent="Refresh the page or check the updater."}
 }
 main();
 </script>
-</body></html>
+</body>
+</html>
