@@ -1,0 +1,924 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cobblemon Shiny Hunting – Interactive Reference</title>
+<style>
+:root{
+  --bg:#07111f;--panel:#101c2e;--panel2:#142238;--line:#263851;--text:#f4f7fb;--muted:#aeb9c9;
+  --blue:#3976ee;--blue2:#2d5fd1;--gold:#f7bd22;--danger:#ffcc4d;--good:#58d68d;
+  --shadow:0 12px 35px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 50% -20%,#172942 0,#07111f 46%,#050c16 100%);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{padding:20px 28px 0;border-bottom:1px solid var(--line);background:rgba(7,17,31,.96);position:sticky;top:0;z-index:30;backdrop-filter:blur(10px)}
+.headrow{display:flex;justify-content:space-between;gap:22px;align-items:flex-start;max-width:1900px;margin:auto}
+.brand{display:flex;gap:16px;align-items:center;min-width:0}
+.ball{font-size:45px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
+h1{margin:0;font-size:32px;line-height:1.15;letter-spacing:-.6px;font-weight:900}
+.brandline{font-size:16px;color:#dce5f2;margin-top:8px}
+.statusbox{min-width:290px;border:1px solid var(--line);background:linear-gradient(135deg,#101d31,#0c1728);border-radius:12px;padding:14px 18px;box-shadow:var(--shadow)}
+.statusbox .dot{color:#5ee58e}.statusbox b{color:#5ee58e}.statusbox small{display:block;color:var(--muted);margin-top:7px}
+nav{display:flex;gap:0;margin-top:18px;max-width:1900px;margin-left:auto;margin-right:auto}
+.tab{background:transparent;color:#dce4ef;border:0;border-right:1px solid rgba(38,56,81,.6);padding:15px 28px;font-weight:800;font-size:17px}
+.tab:first-child{border-left:1px solid rgba(38,56,81,.6);border-radius:10px 0 0 0}
+.tab.active{background:linear-gradient(135deg,#3b73e8,#2d5fd1);color:#fff;box-shadow:0 7px 20px rgba(45,95,209,.3)}
+main{max-width:1900px;margin:auto;padding:18px 20px 50px}
+.card{background:linear-gradient(135deg,rgba(18,31,50,.98),rgba(12,23,39,.98));border:1px solid var(--line);border-radius:11px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
+.card h2{margin:0 0 12px;font-size:21px}
+.card h3{margin:0 0 8px}
+.disclaimer{border-left:5px solid var(--gold)}
+.disclaimer h2{color:var(--gold)}
+.guidegrid{display:grid;grid-template-columns:repeat(6,1fr);gap:22px;margin-top:18px}
+.guideitem b{font-size:16px}.guideitem p{color:var(--muted);line-height:1.45;margin:7px 0 0}
+.icon{font-size:25px;margin-right:8px}
+.small{color:var(--muted);font-size:13px;line-height:1.5}
+.filters{display:grid;grid-template-columns:2fr 1.1fr 1.1fr 1.1fr auto;gap:12px;align-items:end}
+label{display:block;color:#e4ebf4;font-weight:700;font-size:13px;margin:0 0 6px}
+input,select{width:100%;background:#07111f;color:#edf3fb;border:1px solid #30425d;border-radius:6px;padding:10px 12px;outline:none}
+input:focus,select:focus{border-color:#4b83ef;box-shadow:0 0 0 2px rgba(75,131,239,.14)}
+.btn{border:1px solid #36547e;background:#1b2c48;color:#fff;border-radius:6px;padding:10px 14px;font-weight:800}
+.btn.primary{background:linear-gradient(135deg,#3d78ee,#2d5fd1);border-color:#467cf0}
+.btn.ghost{background:#121e31}
+.btn.gold{background:#6c5210;border-color:#a9821c;color:#fff2bd}
+.btn.danger{background:#391b20;border-color:#6e3038}
+.btn:hover{filter:brightness(1.1)}
+.table-wrap{overflow:auto;max-height:67vh;border:1px solid #20324b;border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:1150px}
+th,td{padding:11px 12px;border-bottom:1px solid #1f3048;text-align:left;vertical-align:middle}
+th{position:sticky;top:0;background:#0c1829;z-index:2;white-space:nowrap}
+th.sortable{cursor:pointer}
+th.sortable:hover{background:#12223a}
+tr.data-row:hover{background:rgba(57,118,238,.08)}
+.biome-row td{background:#0b1728;color:#e6edf7;font-weight:900;font-size:14px}
+.poke-img{width:42px;height:42px;object-fit:contain;vertical-align:middle;margin-right:8px;image-rendering:auto}.modal-poke-img{width:110px;height:110px;object-fit:contain}.variant-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:10px}.variant-card{background:#0b1727;border:1px solid var(--line);border-radius:9px;padding:10px;text-align:center}.variant-card img{width:90px;height:90px;object-fit:contain}.shiny-row{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap}.shiny-card{text-align:center}.shiny-card img{width:115px;height:115px;object-fit:contain}.badge{display:inline-block;border-radius:6px;padding:5px 9px;font-size:12px;font-weight:900;background:#344155}
+.badge.common{background:#394454}.badge.uncommon{background:#4b5d2e}.badge.rare{background:#2357a5}.badge.ultra-rare{background:#5b2da2}
+.type{display:inline-block;padding:5px 9px;border-radius:5px;font-size:11px;font-weight:900;margin:2px;background:#3147b5}
+.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#1e304b;color:#dce7f6;font-size:12px;font-weight:700;margin:2px}
+.pill.target{background:#173f3b;color:#83e3cb}.pill.gold{background:#4a3911;color:#ffd96b}
+.muted{color:var(--muted)}
+.hidden{display:none!important}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.buildergrid{display:grid;grid-template-columns:430px 1fr;gap:16px}
+.sticky{position:sticky;top:145px;align-self:start}
+.slotgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.slot{border:1px solid var(--line);border-radius:9px;padding:12px;background:#0b1727}
+.slot-title{font-weight:900;margin-bottom:7px}
+.effectgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px}
+.effect{border:1px solid var(--line);border-radius:8px;padding:12px;background:#0b1727}
+.effect b{font-size:18px;display:block;margin-bottom:4px}
+.recipebox{border:1px solid #2d4e7d;border-radius:10px;padding:15px;background:linear-gradient(135deg,#10213a,#0b1727)}
+.ingredient{display:inline-flex;align-items:center;gap:6px;margin:4px 6px 4px 0;padding:7px 10px;border-radius:7px;background:#172945;border:1px solid #294567;font-weight:800}
+.recipebox .ingredient.gold{border-color:#846a20;background:#30260e;color:#ffe08a}
+.seasoning-tools{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px}
+.seasoning-row{cursor:pointer}
+.seasoning-row:hover{background:rgba(57,118,238,.08)}
+.details{margin-top:14px;border:1px solid var(--line);border-radius:9px;background:#0b1727;padding:14px}
+.accordion{border:1px solid var(--line);border-radius:8px;margin-bottom:9px;overflow:hidden}
+.accordion button{width:100%;text-align:left;background:#0d192b;color:#fff;border:0;padding:14px;font-weight:900}
+.accordion .body{padding:14px;background:#0a1525;color:#c8d3e1;line-height:1.6}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:20px;z-index:100}
+.modalbox{width:min(760px,100%);max-height:85vh;overflow:auto;background:#0d192b;border:1px solid #314866;border-radius:12px;padding:22px;box-shadow:0 25px 80px rgba(0,0,0,.5)}
+.modalhead{display:flex;justify-content:space-between;gap:15px;align-items:center}
+.close{border:0;background:#1a2a42;color:#fff;border-radius:6px;padding:8px 12px;font-weight:900}
+@media(max-width:1200px){.guidegrid{grid-template-columns:repeat(3,1fr)}.buildergrid{grid-template-columns:1fr}.sticky{position:static}.filters{grid-template-columns:1fr 1fr}.statusbox{min-width:230px}}
+@media(max-width:720px){header{padding:15px 12px 0}.headrow{display:block}.statusbox{margin-top:12px}.brandline{font-size:14px}h1{font-size:24px}.tab{padding:12px 10px;font-size:13px}main{padding:12px}.guidegrid{grid-template-columns:1fr 1fr}.filters,.grid2,.seasoning-tools{grid-template-columns:1fr}.slotgrid{grid-template-columns:1fr}}
+
+/* === Final game-dashboard redesign === */
+:root{
+  --pink:#ff4dd8;--pink2:#d23ce9;--violet:#8a5cff;--cyan:#58d8ff;--lime:#76d94f;
+  --glass:rgba(7,15,28,.92);--glass2:rgba(12,22,39,.94);--stroke:#38516d;--stroke2:#536a85;
+}
+body{
+  margin:0;color:#f4f7fb;background:#06101b;
+  background-image:
+    radial-gradient(circle at 12% 15%,rgba(255,65,204,.22),transparent 24%),
+    radial-gradient(circle at 84% 10%,rgba(255,143,84,.17),transparent 26%),
+    linear-gradient(180deg,#192a4d 0%,#10273b 42%,#07131f 100%);
+  background-attachment:fixed;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.45;
+  background:
+    radial-gradient(circle,rgba(255,159,225,.9) 0 2px,transparent 3px) 0 0/93px 93px,
+    radial-gradient(circle,rgba(255,221,241,.8) 0 1.6px,transparent 2.5px) 37px 21px/137px 137px;
+  animation:petals 18s linear infinite;
+}
+@keyframes petals{to{background-position:93px 186px,174px 274px}}
+body.mood-dark{background-image:radial-gradient(circle at 20% 12%,rgba(117,50,174,.26),transparent 25%),linear-gradient(180deg,#170d28,#0d1424 44%,#050a12)}
+body.mood-water{background-image:radial-gradient(circle at 75% 10%,rgba(88,195,255,.24),transparent 28%),linear-gradient(180deg,#183e67,#0b344d 48%,#06121f)}
+body.mood-desert{background-image:radial-gradient(circle at 74% 8%,rgba(255,202,97,.28),transparent 23%),linear-gradient(180deg,#73462f,#4e342d 48%,#18151c)}
+body.mood-cold{background-image:radial-gradient(circle at 50% 0%,rgba(231,249,255,.31),transparent 31%),linear-gradient(180deg,#4a6681,#21384f 46%,#0b1723)}
+body.mood-floral{background-image:radial-gradient(circle at 14% 12%,rgba(255,91,213,.33),transparent 27%),radial-gradient(circle at 82% 8%,rgba(255,178,98,.22),transparent 26%),linear-gradient(180deg,#55385e,#315267 45%,#12353c 70%,#07131c)}
+
+.site-header{padding:0 22px;background:transparent;border:0;position:relative;top:auto;z-index:20}
+.top-nav{
+  max-width:1400px;margin:auto;min-height:49px;display:flex;justify-content:space-between;align-items:center;
+  background:rgba(11,13,29,.95);border:1px solid rgba(255,255,255,.08);border-top:0;border-radius:0 0 17px 17px;
+  box-shadow:0 14px 34px rgba(0,0,0,.33);backdrop-filter:blur(18px);overflow:hidden
+}
+.nav-cluster{display:flex;align-items:stretch;overflow-x:auto}
+.nav-btn,.dark-toggle{border:0;background:transparent;color:#eff3f8;padding:13px 15px;font-weight:700;white-space:nowrap}
+.nav-btn:hover,.nav-btn.active{color:#ff77e1}.nav-btn.active{box-shadow:inset 0 -3px var(--pink)}
+.dark-toggle{display:flex;gap:9px;align-items:center;background:#151225;border-left:1px solid rgba(255,255,255,.08)}
+.dark-toggle i{display:inline-block;width:39px;height:21px;border-radius:999px;background:linear-gradient(90deg,#d03ae8,#ff5fd8);position:relative}
+.dark-toggle i::after{content:"";position:absolute;right:2px;top:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:.2s}
+body.dim-ui .dark-toggle i::after{right:20px}
+
+.hero-art{
+  max-width:1400px;height:218px;margin:0 auto;position:relative;overflow:hidden;
+  background-image:url("assets/approved_hero.png");
+  background-size:cover;background-position:center top;border-radius:0 0 4px 4px;
+  box-shadow:0 20px 50px rgba(0,0,0,.28)
+}
+.hero-tint{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,6,16,.03),rgba(3,8,17,.08) 70%,rgba(3,9,17,.50));pointer-events:none}
+body.mood-dark .hero-art{filter:saturate(.75) hue-rotate(28deg) brightness(.62)}
+body.mood-water .hero-art{filter:saturate(.78) hue-rotate(305deg) brightness(.78)}
+body.mood-desert .hero-art{filter:saturate(.83) hue-rotate(335deg) sepia(.20) brightness(.85)}
+body.mood-cold .hero-art{filter:saturate(.55) hue-rotate(320deg) brightness(.92)}
+body.dim-ui .hero-art{filter:brightness(.62) saturate(.75)}
+.ambient-layer{position:absolute;inset:0;pointer-events:none}
+.ambient-mon{position:absolute;bottom:-11px;opacity:0;transform:translateY(15px) scale(.92);transition:opacity .55s,transform .55s;filter:drop-shadow(0 13px 12px rgba(0,0,0,.52))}
+.ambient-mon.show{opacity:1;transform:translateY(0) scale(1)}
+.ambient-mon img{width:124px;height:124px;object-fit:contain}
+.ambient-mon.a{left:2%}.ambient-mon.b{left:14%;bottom:-22px}.ambient-mon.c{right:14%;bottom:-22px}.ambient-mon.d{right:2%}
+.ambient-mon.b img,.ambient-mon.c img{width:94px;height:94px}
+.hero-status{position:absolute;right:13px;bottom:8px;background:rgba(5,12,23,.78);border:1px solid rgba(255,255,255,.15);padding:5px 9px;border-radius:8px;font-size:10px;backdrop-filter:blur(8px)}
+.hero-status small{margin-left:6px;color:#aeb9c9}.live-dot{color:#29de7c}
+
+main{max-width:1500px;padding:0 18px 40px}
+.home-search{max-width:1050px;margin:-4px auto 12px;position:relative;z-index:25}
+.search-line{display:grid;grid-template-columns:auto 1fr auto;align-items:center;background:rgba(7,14,27,.96);border:1px solid #68748a;border-radius:9px;overflow:hidden;box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.magnify{font-size:25px;padding-left:14px}.search-line input{border:0;background:transparent;box-shadow:none;padding:12px 13px;font-size:15px}
+.random-button{align-self:stretch;padding:0 18px;border:0;border-left:1px solid #566178;background:#171729;color:#fff;font-weight:800}
+.filter-line{display:grid;grid-template-columns:repeat(5,1fr) auto;gap:7px;margin-top:9px}
+.filter-line select,.clear-button{border:1px solid #465b75;background:rgba(11,20,35,.95);color:#fff;border-radius:7px;padding:9px 10px}.clear-button{cursor:pointer}
+
+.dashboard{display:grid;grid-template-columns:265px minmax(0,1fr) 315px;gap:12px;align-items:start}
+.panel{background:linear-gradient(155deg,rgba(11,20,35,.96),rgba(6,14,26,.94));border:1px solid #3b526c;border-radius:12px;box-shadow:0 12px 31px rgba(0,0,0,.29);backdrop-filter:blur(14px)}
+.biome-panel{padding:9px;position:sticky;top:8px;max-height:76vh;overflow:auto}
+.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 7px 9px;font-size:16px}.mobile-close{display:none;border:0;background:transparent;color:#9eb0c5;font-size:23px}
+.biome-row{width:100%;display:flex;justify-content:space-between;align-items:center;border:0;background:transparent;color:#fff;border-radius:7px;padding:8px 9px;text-align:left}
+.biome-row:hover{background:rgba(255,255,255,.055)}.biome-row.active{background:linear-gradient(90deg,rgba(255,58,205,.43),rgba(143,43,194,.21));outline:1px solid rgba(255,101,221,.57)}
+.biome-row em{font-style:normal;background:#202b3d;border-radius:999px;padding:2px 7px;font-size:11px}
+.current-biome-card{margin-top:9px;border:1px solid #39536d;border-radius:9px;overflow:hidden;text-align:center;padding-bottom:7px}.current-biome-art{height:54px;display:flex;align-items:center;justify-content:center;font-size:35px;background:linear-gradient(135deg,#8f3d7a,#e05eaa 48%,#5a73a3)}.current-biome-card small{display:block;color:#aeb9c9;margin-top:5px}
+
+.dex-column{min-width:0}.dex-toolbar{display:flex;justify-content:space-between;align-items:center;margin:3px 0 9px}.sort-tools{display:flex;align-items:center;gap:7px}.sort-tools select{width:auto;padding:7px 9px}.view-switch{width:37px;height:35px;border:1px solid #475b73;background:#101a2b;color:#fff;border-radius:7px;font-size:19px}.view-switch.active{border-color:#ff55d9;color:#ff68dc;box-shadow:0 0 0 2px rgba(255,82,215,.14)}
+.pokemon-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.poke-card{position:relative;background:linear-gradient(155deg,rgba(15,29,46,.98),rgba(6,15,27,.98));border:1px solid #3c5570;border-radius:10px;padding:8px;min-height:211px;overflow:hidden;transition:.16s}
+.poke-card:hover{transform:translateY(-2px);border-color:#ff5ad9;box-shadow:0 10px 24px rgba(0,0,0,.3)}
+.star-btn{position:absolute;top:5px;right:6px;border:0;background:transparent;color:#ffd84f;font-size:20px;z-index:2}
+.sprite-wrap{height:108px;display:flex;align-items:center;justify-content:center;cursor:pointer}.sprite-wrap img{width:110px;height:110px;object-fit:contain;filter:drop-shadow(0 7px 8px rgba(0,0,0,.42))}
+.dex-number{font-size:10px;color:#abb7c7}.pokemon-name{font-weight:900;font-size:14px}.type-row{margin-top:5px}
+.type{border-radius:999px;padding:4px 10px;font-size:10px;margin:2px 2px 0 0}
+.mini-actions{display:flex;gap:5px;margin-top:7px}.mini-actions button{flex:1;border:1px solid #435a74;background:#111d2f;color:#fff;border-radius:6px;padding:5px;font-size:10px}.mini-actions .recipe-mini{background:linear-gradient(90deg,#bf36e2,#ff4fd0);border-color:#e65ddb}
+.pokemon-grid.compact{grid-template-columns:1fr}.compact .poke-card{min-height:70px;display:grid;grid-template-columns:72px 78px 150px 1fr 150px;align-items:center;gap:8px}.compact .sprite-wrap{height:58px}.compact .sprite-wrap img{width:58px;height:58px}
+.pagination{display:flex;justify-content:center;gap:5px;margin-top:10px}.pagination button{min-width:33px;height:33px;border-radius:7px;border:1px solid #354a62;background:#111b2b;color:#fff}.pagination button.active{background:#ff52d7;border-color:#ff77e2;color:#10131b}
+
+.right-column{display:grid;gap:9px;position:sticky;top:8px}.right-column>.panel{padding:10px}
+.help-chip{border:1px solid #7587a0;background:transparent;color:#dce7f4;width:22px;height:22px;border-radius:50%}
+.quick-mode{display:grid;grid-template-columns:1fr 1fr;border:1px solid #526078;border-radius:7px;overflow:hidden}.quick-mode button{border:0;background:#121d2e;color:#fff;padding:8px}.quick-mode button.active{background:linear-gradient(90deg,#dd42eb,#ff50d0)}
+.quick-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.quick-slot{min-height:88px;border:1px solid #465a73;border-radius:7px;background:#132036;text-align:center;padding:6px 4px;font-size:10px;display:flex;flex-direction:column;justify-content:center;gap:4px}.quick-slot strong{font-size:23px;font-weight:400}.quick-slot select{font-size:9px;padding:5px;background:#091523}
+.quick-builder-actions{display:grid;grid-template-columns:1fr 1.35fr;gap:6px;margin-top:8px}.quick-builder-actions button{border:1px solid #475a71;background:#142136;color:#fff;border-radius:6px;padding:8px}.quick-builder-actions .accent{background:linear-gradient(90deg,#c237e5,#ff4ecf)}
+.selected-empty{text-align:center;border:1px solid #344b65;border-radius:8px;padding:22px 8px;color:#f2f5f9}.selected-empty small{display:block;color:#aeb9c9;margin-top:5px}
+.selected-card{display:grid;grid-template-columns:80px 1fr;gap:8px;align-items:center}.selected-card img{width:78px;height:78px;object-fit:contain}.selected-card small{color:#aeb9c9}
+.quick-actions button{width:100%;margin-top:5px;text-align:left;border:1px solid #43566f;background:#111d2e;color:#fff;border-radius:6px;padding:8px}
+.seasoning-preview .panel-heading button{border:0;background:transparent;color:#ffc1f1;font-size:10px}.seasoning-preview-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}.seasoning-dot{height:30px;border:1px solid #374b62;background:#111a29;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px}
+
+#tab-builder,#tab-seasonings,#tab-about{max-width:1400px;margin:0 auto}#tab-builder .card,#tab-seasonings .card,#tab-about .card{background:linear-gradient(155deg,rgba(12,21,36,.97),rgba(6,14,25,.96));border-radius:12px}
+.buildergrid{grid-template-columns:420px 1fr}.sticky{top:8px}.modalbox{background:linear-gradient(155deg,#101d31,#110f23);border-radius:14px;border-color:#66537d}
+
+.site-footer{width:100%;background:#07111d;border-top:1px solid #2d4057;color:#b9c4d2;padding:11px 23px;display:flex;justify-content:space-between;gap:12px;font-size:10px}.footer-logo{font-weight:1000;font-size:17px;background:linear-gradient(90deg,#52d7ff,#72e582,#ffe464,#ff67d7,#8c7aff);-webkit-background-clip:text;color:transparent}
+
+@media(max-width:1280px){.dashboard{grid-template-columns:220px minmax(0,1fr)}.right-column{grid-column:1/-1;position:static;grid-template-columns:repeat(4,1fr)}.pokemon-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:920px){.nav-btn span,.dark-toggle span{display:none}.hero-art{height:190px}.dashboard{grid-template-columns:1fr}.biome-panel{position:fixed;left:8px;top:56px;bottom:8px;width:265px;z-index:120;transform:translateX(-115%);transition:.24s}.biome-panel.open{transform:none}.mobile-close{display:block}.pokemon-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.right-column{grid-template-columns:1fr 1fr}.filter-line{grid-template-columns:1fr 1fr 1fr}.buildergrid{grid-template-columns:1fr}}
+@media(max-width:620px){.site-header{padding:0 6px}.hero-art{height:150px}.ambient-mon.b,.ambient-mon.c{display:none}.ambient-mon img{width:85px;height:85px}.pokemon-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.right-column{grid-template-columns:1fr}.filter-line{grid-template-columns:1fr 1fr}.search-line{grid-template-columns:auto 1fr}.random-button{font-size:0}.random-button::after{content:"⤨";font-size:18px}.compact .poke-card{grid-template-columns:60px 1fr}.compact .poke-card>*:nth-child(n+3){grid-column:2}.site-footer{display:block;text-align:center}.site-footer>div{margin:4px 0}}
+
+
+/* === Exact approved mockup alignment overrides === */
+body{
+  background-image:
+    linear-gradient(rgba(2,8,16,.58),rgba(2,8,16,.70)),
+    url("assets/approved_ambience.jpg") !important;
+  background-size:cover !important;
+  background-position:center top !important;
+}
+.site-header{padding:0 22px !important}
+.top-nav{
+  max-width:none !important;
+  width:calc(100% - 136px) !important;
+  margin:0 68px !important;
+  min-height:49px !important;
+  border-radius:0 0 13px 13px !important;
+}
+.nav-btn{padding:13px 16px !important;font-size:14px !important}
+.dark-toggle{padding:13px 17px !important}
+
+.hero-art{
+  max-width:none !important;
+  width:100% !important;
+  height:211px !important;
+  margin:0 !important;
+  background-size:cover !important;
+  background-position:center top !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+.hero-status{display:none !important}
+.ambient-layer{z-index:3}
+.ambient-mon{bottom:-12px}
+.ambient-mon img{width:112px;height:112px}
+
+main{
+  max-width:none !important;
+  width:100% !important;
+  padding:0 22px 22px !important;
+}
+.home-search{
+  max-width:none !important;
+  width:790px !important;
+  margin:-3px 0 10px 349px !important;
+}
+.search-line{height:44px !important;border-radius:8px !important}
+.search-line input{font-size:14px !important}
+.filter-line{
+  grid-template-columns:145px 139px 142px 159px 176px 1fr !important;
+  gap:8px !important;
+}
+.filter-line select{height:37px !important;padding:7px 10px !important;font-size:12px !important}
+.clear-button{font-size:11px !important}
+
+.dashboard{
+  grid-template-columns:266px minmax(0, 1fr) 315px !important;
+  gap:12px !important;
+}
+.biome-panel{
+  padding:9px !important;
+  border-radius:12px !important;
+  max-height:none !important;
+  position:relative !important;
+  top:auto !important;
+}
+.panel-heading{font-size:15px !important;padding:4px 7px 8px !important}
+.biome-row{padding:7px 9px !important;font-size:12px !important}
+.biome-row em{font-size:10px !important}
+
+.dex-toolbar{height:40px !important;margin:0 0 8px !important}
+#status{font-size:14px !important}
+.sort-tools{font-size:12px !important}
+.sort-tools select{height:35px !important;font-size:11px !important}
+
+.pokemon-grid{
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+  gap:7px !important;
+}
+.poke-card{
+  min-height:160px !important;
+  height:160px !important;
+  padding:7px !important;
+  border-radius:9px !important;
+}
+.sprite-wrap{height:88px !important}
+.sprite-wrap img{width:91px !important;height:91px !important}
+.dex-number{font-size:9px !important}
+.pokemon-name{font-size:13px !important}
+.type{font-size:9px !important;padding:3px 9px !important}
+.mini-actions{display:none !important}
+.star-btn{font-size:18px !important}
+
+.right-column{gap:9px !important;position:relative !important;top:auto !important}
+.right-column>.panel{padding:10px !important;border-radius:12px !important}
+.quick-builder-panel{min-height:240px}
+.quick-slots{gap:6px !important}
+.quick-slot{min-height:87px !important}
+.selected-empty{padding:26px 8px !important}
+.quick-actions button{padding:7px 8px !important;font-size:11px !important}
+.seasoning-preview-grid{gap:4px !important}
+
+.pagination{margin-top:9px !important}
+.pagination button{height:32px !important;min-width:32px !important}
+
+.site-footer{
+  padding:9px 23px !important;
+  min-height:49px !important;
+  align-items:center !important;
+}
+
+@media(max-width:1300px){
+  .top-nav{width:calc(100% - 24px) !important;margin:0 12px !important}
+  .home-search{width:calc(100% - 360px) !important;margin-left:285px !important}
+  .dashboard{grid-template-columns:225px minmax(0,1fr) 285px !important}
+}
+@media(max-width:1000px){
+  .home-search{width:100% !important;margin:0 0 10px !important}
+  .dashboard{grid-template-columns:1fr !important}
+  .biome-panel,.right-column{position:static !important}
+  .pokemon-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important}
+}
+
+
+/* === Full-page approved cherry-blossom background === */
+body{
+  background:
+    linear-gradient(rgba(3,9,18,.46),rgba(3,9,18,.72)),
+    url("assets/approved_hero.png") center center / cover fixed no-repeat !important;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  background:url("assets/approved_hero.png") center center / cover no-repeat;
+  filter:saturate(1.08) brightness(.9);
+}
+body::after{z-index:-1 !important}
+main,.dashboard,.dex-column,.right-column{background:transparent !important}
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="top-nav">
+    <div class="nav-cluster">
+      <button class="nav-btn active" data-nav="home">⌂ <span>Home</span></button>
+      <button class="nav-btn" data-nav="pokemon">◉ <span>Pokémon</span></button>
+      <button class="nav-btn" data-nav="biomes">♟ <span>Biomes</span></button>
+      <button class="nav-btn" data-nav="builder">☷ <span>Recipe Builder</span></button>
+      <button class="nav-btn" data-nav="items">▣ <span>Items</span></button>
+      <button class="nav-btn" data-nav="guide">ⓘ <span>Shiny Guide</span></button>
+      <button class="nav-btn" data-nav="about">ⓘ <span>About</span></button>
+    </div>
+    <button class="dark-toggle" id="darkToggle">☀ <span>Dark Mode</span><i></i></button>
+  </div>
+
+  <div class="hero-art" id="heroArt">
+    <div class="hero-tint"></div>
+    <div class="ambient-layer" id="ambientLayer" aria-hidden="true"></div>
+    <div class="hero-status">
+      <span class="live-dot">●</span>
+      <span id="dataStatus">Checking data…</span>
+      <small id="dataUpdated"></small>
+    </div>
+  </div>
+</header>
+
+
+<main>
+
+<section id="tab-list">
+  <div class="home-search">
+    <div class="search-line">
+      <span class="magnify">⌕</span>
+      <input id="search" placeholder="Search Pokémon... (by name or #)">
+      <button id="randomPokemon" class="random-button">⤨ Random</button>
+    </div>
+    <div class="filter-line">
+      <select id="biomeFilter"><option value="">All Biomes</option></select>
+      <select id="typeFilter"><option value="">All Types</option></select>
+      <select id="rarityFilter"><option value="">All Rarities</option><option>common</option><option>uncommon</option><option>rare</option><option>ultra-rare</option></select>
+      <select id="eggFilter"><option value="">All Egg Groups</option></select>
+      <select id="formFilter"><option value="">All Forms</option><option value="variants">Variants Available</option></select>
+      <button id="clearFilters" class="clear-button">Clear</button>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <aside class="panel biome-panel" id="biomePanel">
+      <div class="panel-heading"><b>🍃 Biomes</b><button class="mobile-close" id="closeBiomes">×</button></div>
+      <button class="biome-row active" data-biome=""><span>🌐 All Biomes</span><em id="allBiomeCount">0</em></button>
+      <div id="biomeRows"></div>
+      <div class="current-biome-card" id="currentBiomeCard">
+        <div class="current-biome-art">🌸</div>
+        <small>Current Biome</small>
+        <b>All Biomes</b>
+      </div>
+    </aside>
+
+    <section class="dex-column" id="pokemonSection">
+      <div class="dex-toolbar">
+        <div id="status"><b>Loading Pokémon…</b></div>
+        <div class="sort-tools">
+          <span>Sort:</span>
+          <select id="sortMode">
+            <option value="dex">Pokédex Number</option>
+            <option value="name">Name</option>
+            <option value="rarity">Rarity</option>
+          </select>
+          <button id="gridView" class="view-switch active">▦</button>
+          <button id="compactView" class="view-switch">☷</button>
+        </div>
+      </div>
+
+      <div id="pokemonGrid" class="pokemon-grid"></div>
+      <div id="pagination" class="pagination"></div>
+    </section>
+
+    <aside class="right-column">
+      <div class="panel quick-builder-panel">
+        <div class="panel-heading"><b>🍲 Recipe Builder</b><button class="help-chip" title="Quick builder uses the same three seasoning slots as the full builder.">?</button></div>
+        <div class="quick-mode">
+          <button id="quickSnack" class="active">Poké Snacks</button>
+          <button id="quickBait">Poké Bait</button>
+        </div>
+        <div id="quickSlots" class="quick-slots"></div>
+        <div class="quick-builder-actions">
+          <button id="quickClear">Clear All</button>
+          <button id="quickShow" class="accent">Show Results →</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-heading"><b>⭐ Selected Pokémon</b></div>
+        <div id="selectedHome" class="selected-empty">No Pokémon selected<br><small>Click a Pokémon to view details, spawns, and recipe suggestions.</small></div>
+      </div>
+
+      <div class="panel quick-actions">
+        <div class="panel-heading"><b>✦ Quick Actions</b></div>
+        <button id="findRecipe">✨ Find Shiny Recipes</button>
+        <button id="viewSpawns">♟ View Spawn Locations</button>
+        <button id="addChecklist">☑ Add to Checklist</button>
+      </div>
+
+      <div class="panel seasoning-preview">
+        <div class="panel-heading"><b>🍃 Seasoning Reference</b><button id="viewAllSeasonings">View All →</button></div>
+        <div id="seasoningPreview" class="seasoning-preview-grid"></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section id="tab-builder" class="hidden">
+  <div class="buildergrid">
+    <div class="card sticky">
+      <h2>🧪 Interactive Recipe Builder</h2>
+      <p class="small">Pick a Pokémon and a goal. The builder recommends a recipe, but every slot can be changed manually.</p>
+      <label for="pokeSelect">Pokémon</label><select id="pokeSelect"></select>
+      <div style="height:10px"></div>
+      <label for="goalSelect">Recipe Goal</label>
+      <select id="goalSelect">
+        <option value="balanced">⭐ Shiny + Rarity + Target</option>
+        <option value="maxshiny">✨ Maximum Shiny + Target</option>
+        <option value="target">🎯 Maximum Target Attraction</option>
+        <option value="rarity">👑 Maximum Rarity</option>
+        <option value="fast">⚡ Faster Bites / Reel-ins</option>
+        <option value="level">⬆️ Higher Lured Level</option>
+        <option value="custom">🛠 Custom</option>
+      </select>
+      <div style="height:10px"></div>
+      <label for="itemMode">Make This As</label><select id="itemMode"><option value="snack">Poké Snack</option><option value="bait">Poké Bait</option></select>
+      <div id="selectedInfo" class="details">Select a Pokémon.</div>
+      <div id="targetOptions" class="details"></div>
+      <h3 style="margin-top:16px">Seasoning Slots</h3>
+      <div id="slots" class="slotgrid"></div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary" id="applyGoal">Apply Goal</button>
+        <button class="btn" id="clearSlots">Clear Slots</button>
+      </div>
+    </div>
+    <div>
+      <div class="card"><h2>📋 Recipe</h2><div id="recipeOutput"></div></div>
+      <div class="card"><h2>📊 Combined Effects</h2><div id="effects" class="effectgrid"></div></div>
+      <div class="card"><h2>💡 Best Ingredients for This Pokémon</h2><div id="bestIngredients"></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="tab-seasonings" class="hidden">
+  <div class="card">
+    <h2>🍓 Seasoning Reference</h2>
+    <p class="small">Search or filter the full seasoning list. Click any seasoning for details, or use it directly in the Recipe Builder.</p>
+    <div class="seasoning-tools">
+      <input id="seasoningSearch" placeholder="Search seasoning or effect…">
+      <select id="seasoningFilter"><option value="">All Effects</option><option value="shiny">Shiny</option><option value="rarity">Rarity</option><option value="target">Type / Egg Group</option><option value="bite">Bite / Reel</option><option value="level">Lured Level</option><option value="special">Other</option></select>
+    </div>
+    <div class="table-wrap" style="max-height:68vh">
+      <table><thead><tr><th>Seasoning</th><th>Effect</th><th>Useful For</th><th></th></tr></thead><tbody id="seasoningTable"></tbody></table>
+    </div>
+    <div id="seasoningDetails" class="details hidden"></div>
+  </div>
+</section>
+
+<section id="tab-about" class="hidden">
+  <div class="card">
+    <h2>ℹ️ About This Reference</h2>
+    <div class="accordion"><button data-acc="how">How the reference works ▾</button><div id="acc-how" class="body hidden">The spawn table is embedded into the website so the page does not need to make live browser requests for every lookup. A GitHub Actions updater can regenerate the embedded database from the public/base source on its schedule, then GitHub Pages republishes the updated site.</div></div>
+    <div class="accordion"><button data-acc="recipes">How recipes work ▾</button><div id="acc-recipes" class="body hidden">The Recipe Builder combines three seasoning slots and totals their effects. Same-effect seasonings can stack. The recommended shiny recipe favors Starf Berry, rarity uses Golden Carrot or Glistering Melon Slice, and target recipes use matching type or egg-group bait. Enchanted Golden Apple is available manually, but it is not treated as the default priority.</div></div>
+    <div class="accordion"><button data-acc="rarity">Rarity & spawn data ▾</button><div id="acc-rarity" class="body hidden">The listed rarity labels come from the public/base spawn data used by the updater. Complex Cobblemon can change rarity weights, disable species, add custom conditions, or otherwise modify server-side spawning.</div></div>
+    <div class="accordion"><button data-acc="complex">Why Complex may differ ▾</button><div id="acc-complex" class="body hidden">Complex Cobblemon is a server environment and may have private or server-side configuration that is not exposed in a complete public machine-readable spawn list. That means this reference is useful for planning, but in-game information should be treated as the final authority for Complex-specific behavior.</div></div>
+    <div class="accordion"><button data-acc="updates">Automatic updates ▾</button><div id="acc-updates" class="body hidden">The updater is designed to run through GitHub Actions. Scheduled workflows can be delayed by GitHub, so the update time is approximate rather than guaranteed to occur at an exact minute.</div></div>
+  </div>
+  <div class="card disclaimer">
+    <h2>⚠️ Complex Cobblemon Limitation / Disclaimer</h2>
+    <p>This page does <b>not</b> claim to have access to Complex's private server configuration. Its spawn reference is based on public/base Cobblemon data. Complex may have custom spawn pools, altered rarities, disabled Pokémon, changed biome conditions, datapacks, or other server-specific settings.</p>
+    <p><b>Always verify important spawn information in-game on Complex Cobblemon.</b></p>
+  </div>
+  <div class="card">
+    <h2>🔄 Changelog</h2>
+    <ul class="small">
+      <li>Interactive spawn search, biome/rarity/type filters, sorting, and Pokémon detail view.</li>
+      <li>Recipe Builder with goal presets, editable seasoning slots, stacking calculations, and optional Enchanted Golden Apple.</li>
+      <li>Interactive Seasonings reference with search, effect filters, details, and “Use in Recipe”.</li>
+      <li>Interactive About & Disclaimer sections.</li>
+      <li>Embedded-data architecture prepared for automatic GitHub Actions updates.</li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div><span class="footer-logo">COMPLEX</span> &nbsp; Cobblemon Shiny Hunting Tool &nbsp;|&nbsp; Built for Adventurers</div>
+  <div>Not affiliated with Mojang, Nintendo, or The Pokémon Company.</div>
+  <div><span class="live-dot">●</span> Data auto-updated via GitHub Actions</div>
+</footer>
+
+
+<div id="modal" class="modal hidden"><div class="modalbox"><div class="modalhead"><h2 id="modalTitle">Pokémon</h2><button class="close" id="modalClose">✕</button></div><div id="modalBody"></div></div></div>
+
+<script src="data/spawn-data.js"></script>
+<script>
+const TYPE_BAIT={Bug:"Tanga Berry",Dark:"Colbur Berry",Dragon:"Haban Berry",Electric:"Wacan Berry",Fairy:"Roseli Berry",Fighting:"Chople Berry",Fire:"Occa Berry",Flying:"Coba Berry",Ghost:"Kasib Berry",Grass:"Rindo Berry",Ground:"Shuca Berry",Ice:"Yache Berry",Normal:"Chilan Berry",Poison:"Kebia Berry",Psychic:"Payapa Berry",Rock:"Charti Berry",Steel:"Babiri Berry",Water:"Passho Berry"};
+const EGG_BAIT={"dragon":"Lum Berry","monster":"Lum Berry","field":"Rawst Berry","human-like":"Chesto Berry","flying":"Chesto Berry","water 3":"Pecha Berry","bug":"Pecha Berry","fairy":"Cheri Berry","grass":"Cheri Berry","water 1":"Aspear Berry","water 2":"Aspear Berry","mineral":"Persim Berry","amorphous":"Persim Berry"};
+const SEASONINGS={
+"Glistering Melon Slice":{rarity:1,desc:"+1 rarity tier",cat:"rarity"},
+"Golden Carrot":{rarity:1,desc:"+1 rarity tier",cat:"rarity"},
+"Starf Berry":{shiny:5,desc:"5× shiny chance",cat:"shiny"},
+"Enigma Berry":{ability:5,desc:"5% chance to attract Hidden Ability Pokémon",cat:"special"},
+"Sweet Berries":{bite:12.5,desc:"12.5% shorter bite time",cat:"bite"},
+"Glow Berries":{bite:25,desc:"25% shorter bite time",cat:"bite"},
+"Custap Berry":{bite:25,reel:1,desc:"25% shorter bite time; increased reel chance",cat:"bite"},
+"Micle Berry":{bite:25,reel:1,desc:"25% shorter bite time; increased reel chance",cat:"bite"},
+"Oran Berry":{bite:33,desc:"33% shorter bite time",cat:"bite"},
+"Apple":{bite:50,desc:"50% shorter bite time",cat:"bite"},
+"Sitrus Berry":{bite:50,desc:"50% shorter bite time",cat:"bite"},
+"Leppa Berry":{level:5,desc:"+5 lured level",cat:"level"},
+"Hopo Berry":{level:10,desc:"+10 lured level",cat:"level"},
+"Jaboca Berry":{friendship:100,desc:"+100 friendship",cat:"special"},
+"Rowap Berry":{drops:1,desc:"Rerolls drops",cat:"special"},
+"Enchanted Golden Apple":{special:1,desc:"Optional premium seasoning; available manually but intentionally not prioritized by automatic recipes",cat:"special",gold:true},
+"Tanga Berry":{type:["bug"],desc:"Attracts Bug-type Pokémon",cat:"target"},
+"Colbur Berry":{type:["dark"],desc:"Attracts Dark-type Pokémon",cat:"target"},
+"Haban Berry":{type:["dragon"],desc:"Attracts Dragon-type Pokémon",cat:"target"},
+"Wacan Berry":{type:["electric"],desc:"Attracts Electric-type Pokémon",cat:"target"},
+"Roseli Berry":{type:["fairy"],desc:"Attracts Fairy-type Pokémon",cat:"target"},
+"Chople Berry":{type:["fighting"],desc:"Attracts Fighting-type Pokémon",cat:"target"},
+"Occa Berry":{type:["fire"],desc:"Attracts Fire-type Pokémon",cat:"target"},
+"Coba Berry":{type:["flying"],desc:"Attracts Flying-type Pokémon",cat:"target"},
+"Kasib Berry":{type:["ghost"],desc:"Attracts Ghost-type Pokémon",cat:"target"},
+"Rindo Berry":{type:["grass"],desc:"Attracts Grass-type Pokémon",cat:"target"},
+"Shuca Berry":{type:["ground"],desc:"Attracts Ground-type Pokémon",cat:"target"},
+"Yache Berry":{type:["ice"],desc:"Attracts Ice-type Pokémon",cat:"target"},
+"Chilan Berry":{type:["normal"],desc:"Attracts Normal-type Pokémon",cat:"target"},
+"Kebia Berry":{type:["poison"],desc:"Attracts Poison-type Pokémon",cat:"target"},
+"Payapa Berry":{type:["psychic"],desc:"Attracts Psychic-type Pokémon",cat:"target"},
+"Charti Berry":{type:["rock"],desc:"Attracts Rock-type Pokémon",cat:"target"},
+"Babiri Berry":{type:["steel"],desc:"Attracts Steel-type Pokémon",cat:"target"},
+"Passho Berry":{type:["water"],desc:"Attracts Water-type Pokémon",cat:"target"},
+"Lum Berry":{egg:["dragon","monster"],desc:"Attracts Dragon + Monster egg groups",cat:"target"},
+"Pecha Berry":{egg:["water 3","bug"],desc:"Attracts Water 3 + Bug egg groups",cat:"target"},
+"Cheri Berry":{egg:["fairy","grass"],desc:"Attracts Fairy + Grass egg groups",cat:"target"},
+"Chesto Berry":{egg:["human-like","flying"],desc:"Attracts Human-Like + Flying egg groups",cat:"target"},
+"Rawst Berry":{egg:["field"],desc:"Attracts Field egg group",cat:"target"},
+"Aspear Berry":{egg:["water 1","water 2"],desc:"Attracts Water 1 + Water 2 egg groups",cat:"target"},
+"Persim Berry":{egg:["mineral","amorphous"],desc:"Attracts Mineral + Amorphous egg groups",cat:"target"},
+"Razz Berry":{nature:["attack"],desc:"Attack nature attraction (25)",cat:"special"},
+"Figy Berry":{nature:["attack"],desc:"Attack nature attraction (50)",cat:"special"},
+"Touga Berry":{nature:["attack"],desc:"Attack nature attraction (75)",cat:"special"},
+"Spelon Berry":{nature:["attack"],desc:"Attack nature attraction (100)",cat:"special"},
+"Pinap Berry":{nature:["defense"],desc:"Defense nature attraction (25)",cat:"special"},
+"Iapapa Berry":{nature:["defense"],desc:"Defense nature attraction (50)",cat:"special"},
+"Nomel Berry":{nature:["defense"],desc:"Defense nature attraction (75)",cat:"special"},
+"Belue Berry":{nature:["defense"],desc:"Defense nature attraction (100)",cat:"special"},
+"Bluk Berry":{nature:["sp. atk"],desc:"Sp. Atk nature attraction (25)",cat:"special"},
+"Wiki Berry":{nature:["sp. atk"],desc:"Sp. Atk nature attraction (50)",cat:"special"},
+"Cornn Berry":{nature:["sp. atk"],desc:"Sp. Atk nature attraction (75)",cat:"special"},
+"Pamtre Berry":{nature:["sp. atk"],desc:"Sp. Atk nature attraction (100)",cat:"special"},
+"Wepear Berry":{nature:["sp. def"],desc:"Sp. Def nature attraction (25)",cat:"special"},
+"Aguav Berry":{nature:["sp. def"],desc:"Sp. Def nature attraction (50)",cat:"special"},
+"Rabuta Berry":{nature:["sp. def"],desc:"Sp. Def nature attraction (75)",cat:"special"},
+"Durin Berry":{nature:["sp. def"],desc:"Sp. Def nature attraction (100)",cat:"special"},
+"Nanab Berry":{nature:["speed"],desc:"Speed nature attraction (25)",cat:"special"},
+"Mago Berry":{nature:["speed"],desc:"Speed nature attraction (50)",cat:"special"},
+"Magost Berry":{nature:["speed"],desc:"Speed nature attraction (75)",cat:"special"},
+"Watmel Berry":{nature:["speed"],desc:"Speed nature attraction (100)",cat:"special"}
+};
+const names=Object.keys(SEASONINGS);
+let all=[],current=null,slots=[null,null,null],sortKey="name",sortAsc=true,compactMode=false,currentPage=1,pageSize=20,ambientTimer=null;
+
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+function spriteUrl(x, shiny=false){
+  const id=x.pokemon_id||x.id;
+  return id ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${shiny?'shiny/':''}${id}.png` : '';
+}
+function artworkUrl(id, shiny=false){
+  return id ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${shiny?'shiny/':''}${id}.png` : '';
+}
+function formLabel(f){
+  const raw=(f.form_identifier||f.identifier||'').replace(/^'+"'"+'/, '').replace(/-/g,' ');
+  if(!raw || raw==='default') return 'Default';
+  return raw.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+}
+
+function dexNum(x){const n=Number(x?.pokemon_id||999999);return Number.isFinite(n)?n:999999}
+function biomesOf(x){return (x.biomes||"").split(",").map(v=>v.trim()).filter(Boolean)}
+function uniquePokemon(rows){
+  const m=new Map();
+  rows.forEach(x=>{
+    if(!m.has(x.name))m.set(x.name,{...x,_biomes:new Set(),_rarities:new Set()});
+    const y=m.get(x.name);
+    biomesOf(x).forEach(b=>y._biomes.add(b)); if(x.rarity)y._rarities.add(x.rarity);
+    if(!y.pokemon_id&&x.pokemon_id)y.pokemon_id=x.pokemon_id;
+    if((x.forms||[]).length>(y.forms||[]).length)y.forms=x.forms;
+    if((x.types||[]).length>(y.types||[]).length)y.types=x.types;
+    if((x.groups||[]).length>(y.groups||[]).length)y.groups=x.groups;
+  });
+  return [...m.values()].map(x=>({...x,biomes:[...x._biomes].join(", "),rarity:[...x._rarities][0]||x.rarity}));
+}
+function rarityRank(r){return {"common":1,"uncommon":2,"rare":3,"ultra-rare":4}[String(r||"").toLowerCase()]||9}
+function setMood(biome){
+  document.body.classList.remove("mood-dark","mood-water","mood-desert","mood-cold","mood-floral");
+  const b=(biome||"").toLowerCase();
+  if(/nether|end|cave|swamp|dark|deep|haunt/.test(b))document.body.classList.add("mood-dark");
+  else if(/ocean|river|beach|water|lake/.test(b))document.body.classList.add("mood-water");
+  else if(/desert|badland|savanna/.test(b))document.body.classList.add("mood-desert");
+  else if(/snow|ice|cold|frozen|mountain/.test(b))document.body.classList.add("mood-cold");
+  else document.body.classList.add("mood-floral");
+}
+function moodScore(x,biome){
+  const b=(biome||"").toLowerCase(),t=(x.types||[]).map(v=>v.toLowerCase()); let s=0;
+  if(/cherry|floral|flower|grove|forest|plain|meadow/.test(b)){if(t.includes("fairy"))s+=10;if(t.includes("grass"))s+=7;if(t.includes("normal"))s+=4;if(t.includes("bug"))s+=2}
+  else if(/nether|end|cave|swamp|dark|deep|haunt/.test(b)){if(t.includes("ghost"))s+=10;if(t.includes("dark"))s+=9;if(t.includes("poison"))s+=5;if(t.includes("psychic"))s+=3}
+  else if(/ocean|river|beach|water|lake/.test(b)){if(t.includes("water"))s+=10;if(t.includes("ice"))s+=3}
+  else if(/desert|badland|savanna/.test(b)){if(t.includes("ground"))s+=9;if(t.includes("rock"))s+=8;if(t.includes("fire"))s+=5}
+  else if(/snow|ice|cold|frozen|mountain/.test(b)){if(t.includes("ice"))s+=10;if(t.includes("rock"))s+=4;if(t.includes("flying"))s+=2}
+  return s;
+}
+function ambientCandidates(biome){
+  const u=uniquePokemon(all); let c=biome?u.filter(x=>biomesOf(x).includes(biome)):u;
+  c=c.filter(x=>x.pokemon_id).sort((a,b)=>moodScore(b,biome)-moodScore(a,biome)||dexNum(a)-dexNum(b));
+  return c.length?c:u.filter(x=>x.pokemon_id);
+}
+function refreshAmbient(biome){
+  if(ambientTimer)clearInterval(ambientTimer); setMood(biome);
+  const layer=document.getElementById("ambientLayer"); if(!layer)return; let offset=0;
+  const draw=()=>{
+    const c=ambientCandidates(biome); if(!c.length)return;
+    const picks=[0,1,2,3].map(i=>c[(offset+i)%c.length]); offset=(offset+2)%Math.max(1,c.length);
+    layer.innerHTML=picks.map((x,i)=>`<div class="ambient-mon ${["a","b","c","d"][i]}"><img src="${artworkUrl(x.pokemon_id)||spriteUrl(x)}" alt=""></div>`).join("");
+    requestAnimationFrame(()=>layer.querySelectorAll(".ambient-mon").forEach((n,i)=>setTimeout(()=>n.classList.add("show"),80*i)));
+  };
+  draw(); ambientTimer=setInterval(draw,8500);
+}
+function biomeIcon(b){
+  return /cherry|floral|flower|grove/i.test(b)?"🌸":/forest/i.test(b)?"🌲":/plain|meadow/i.test(b)?"🌿":/mountain|hill/i.test(b)?"⛰️":/beach/i.test(b)?"🏝️":/desert/i.test(b)?"🌵":/badland/i.test(b)?"🟧":/swamp/i.test(b)?"🌳":/river/i.test(b)?"💧":/ocean/i.test(b)?"🌊":/nether/i.test(b)?"🔥":/end/i.test(b)?"👁️":/cave/i.test(b)?"💎":"◆";
+}
+function renderBiomeRows(){
+  const counts={}; uniquePokemon(all).forEach(x=>biomesOf(x).forEach(b=>counts[b]=(counts[b]||0)+1));
+  document.getElementById("allBiomeCount").textContent=uniquePokemon(all).length.toLocaleString();
+  document.getElementById("biomeRows").innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([b,c])=>`<button class="biome-row" data-biome="${esc(b)}"><span>${biomeIcon(b)} ${esc(b)}</span><em>${c}</em></button>`).join("");
+  document.querySelectorAll(".biome-row").forEach(btn=>btn.onclick=()=>selectBiome(btn.dataset.biome||""));
+}
+function selectBiome(biome){
+  document.getElementById("biomeFilter").value=biome||"";
+  document.querySelectorAll(".biome-row").forEach(b=>b.classList.toggle("active",(b.dataset.biome||"")===(biome||"")));
+  const card=document.getElementById("currentBiomeCard");
+  card.querySelector(".current-biome-art").textContent=biome?biomeIcon(biome):"🌸";
+  card.querySelector("b").textContent=biome||"All Biomes";
+  currentPage=1; refreshAmbient(biome); renderList(); document.getElementById("biomePanel").classList.remove("open");
+}
+function filteredPokemon(){
+  const q=document.getElementById("search").value.toLowerCase().trim(),bf=document.getElementById("biomeFilter").value,rf=document.getElementById("rarityFilter").value,tf=document.getElementById("typeFilter").value,ef=document.getElementById("eggFilter").value,ff=document.getElementById("formFilter").value,sm=document.getElementById("sortMode").value;
+  let rows=uniquePokemon(all).filter(x=>{
+    const hay=`${x.name} ${dexNum(x)} ${x.rarity} ${x.biomes} ${(x.types||[]).join(" ")} ${(x.groups||[]).join(" ")}`.toLowerCase();
+    return (!q||hay.includes(q))&&(!bf||biomesOf(x).includes(bf))&&(!rf||x.rarity===rf)&&(!tf||(x.types||[]).includes(tf))&&(!ef||(x.groups||[]).includes(ef))&&(!ff||(x.forms||[]).length>1);
+  });
+  rows.sort((a,b)=>sm==="name"?a.name.localeCompare(b.name):sm==="rarity"?rarityRank(a.rarity)-rarityRank(b.rarity)||dexNum(a)-dexNum(b):dexNum(a)-dexNum(b)||a.name.localeCompare(b.name));
+  return rows;
+}
+function renderSelectedHome(x){
+  const el=document.getElementById("selectedHome"); if(!x){el.className="selected-empty";el.innerHTML='No Pokémon selected<br><small>Click a Pokémon to view details, spawns, and recipe suggestions.</small>';return}
+  el.className="selected-card";
+  el.innerHTML=`<img src="${artworkUrl(x.pokemon_id)||spriteUrl(x)}" alt="${esc(x.name)}"><div><b>${esc(x.name)}</b><br><small>#${String(dexNum(x)).padStart(4,"0")} • ${esc(x.rarity||"")}</small><br>${(x.types||[]).map(t=>`<span class="type">${esc(t)}</span>`).join("")}<br><small>${esc(x.biomes||"Unknown biome")}</small></div>`;
+}
+function renderQuickSlots(){
+  const el=document.getElementById("quickSlots"); if(!el)return;
+  el.innerHTML=slots.map((n,i)=>`<div class="quick-slot"><strong>${n?"✦":"+"}</strong><span>${n?esc(n):"Add Seasoning"}</span><select data-qslot="${i}"><option value="">— Empty —</option>${names.map(s=>`<option value="${esc(s)}" ${s===n?"selected":""}>${esc(s)}</option>`).join("")}</select></div>`).join("");
+  el.querySelectorAll("select").forEach(s=>s.onchange=e=>{slots[+e.target.dataset.qslot]=e.target.value||null;document.getElementById("goalSelect").value="custom";renderQuickSlots();if(current)renderOutputs()});
+}
+function renderSeasoningPreview(){
+  const icons=["🍓","🫐","🍋","🍏","🥥","🍊","🟧","🟫","⬜","🟩","🥚","🟣"];
+  document.getElementById("seasoningPreview").innerHTML=names.slice(0,12).map((n,i)=>`<button class="seasoning-dot" data-season="${esc(n)}" title="${esc(n)}">${icons[i]||"◆"}</button>`).join("");
+  document.querySelectorAll(".seasoning-dot").forEach(b=>b.onclick=()=>{slots[0]=b.dataset.season;renderQuickSlots();if(current)renderSelected()});
+}
+function checklistToggle(name){
+  const key="cobblemon-shiny-checklist",s=new Set(JSON.parse(localStorage.getItem(key)||"[]"));
+  s.has(name)?s.delete(name):s.add(name);localStorage.setItem(key,JSON.stringify([...s]));renderList();
+}
+
+function targetBaits(x){
+  const out=[],types=(x.types||[]),groups=(x.groups||[]).map(g=>g.toLowerCase());
+  types.forEach(t=>{if(TYPE_BAIT[t])out.push({bait:TYPE_BAIT[t],reason:t+" type"});});
+  groups.forEach(g=>{if(EGG_BAIT[g]&&!out.some(o=>o.bait===EGG_BAIT[g]))out.push({bait:EGG_BAIT[g],reason:g+" egg group"});});
+  return out;
+}
+function matching(x,n){const e=SEASONINGS[n]||{},types=(x.types||[]).map(v=>v.toLowerCase()),groups=(x.groups||[]).map(v=>v.toLowerCase());return (e.type||[]).some(v=>types.includes(v))||(e.egg||[]).some(v=>groups.includes(v));}
+function preset(goal,x){
+  const t=targetBaits(x)[0]?.bait||"";
+  if(goal==="balanced")return ["Starf Berry","Golden Carrot",t||"Starf Berry"];
+  if(goal==="maxshiny")return ["Starf Berry","Starf Berry",t||"Starf Berry"];
+  if(goal==="target")return [t||"Starf Berry",t||"Starf Berry",t||"Starf Berry"];
+  if(goal==="rarity")return ["Golden Carrot","Golden Carrot","Golden Carrot"];
+  if(goal==="fast")return ["Apple","Apple","Sitrus Berry"];
+  if(goal==="level")return ["Hopo Berry","Hopo Berry","Hopo Berry"];
+  return slots;
+}
+function effectTotals(arr){
+  const t={shiny:1,rarity:0,bite:0,reel:0,level:0,ability:0,friendship:0,drops:0,special:0};
+  arr.filter(Boolean).forEach(n=>{const e=SEASONINGS[n]||{};Object.keys(t).forEach(k=>{if(e[k])t[k]+=e[k]});});
+  return t;
+}
+function showTab(tab){
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  document.querySelectorAll("section[id^=tab-]").forEach(s=>s.classList.toggle("hidden",s.id!=="tab-"+tab));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function renderTargetOptions(x){
+  const b=targetBaits(x);
+  document.getElementById("targetOptions").innerHTML=`<b>🎯 Matching Target Ingredients</b><div style="margin-top:7px">${b.length?b.map(o=>`<span class="pill target">${esc(o.bait)} — ${esc(o.reason)}</span>`).join(""):`<span class="muted">No mapped type/egg-group bait found.</span>`}</div>`;
+}
+function renderSelected(){
+  if(!current)return;
+  document.getElementById("selectedInfo").innerHTML=`<b style="font-size:18px">${esc(current.name)}</b><br><span class="muted">Type:</span> ${(current.types||[]).map(t=>`<span class="type">${esc(t)}</span>`).join(" ")||"Unknown"}<br><span class="muted">Egg Group(s):</span> ${esc((current.groups||[]).join(" / ")||"Unknown")}<br><span class="muted">Spawn rarity:</span> <b>${esc(current.rarity||"Multiple")}</b>`;
+  renderTargetOptions(current);renderSlots();renderOutputs();renderSelectedHome(current);renderQuickSlots();
+}
+function renderSlots(){
+  const el=document.getElementById("slots");
+  el.innerHTML=slots.map((n,i)=>`<div class="slot"><div class="slot-title">Slot ${i+1}</div><select data-slot="${i}"><option value="">— Empty —</option>${names.map(s=>`<option value="${esc(s)}" ${s===n?"selected":""}>${esc(s)}</option>`).join("")}</select>${n?`<div class="small" style="margin-top:7px">${esc(SEASONINGS[n].desc)}</div>`:""}</div>`).join("");
+  el.querySelectorAll("select").forEach(s=>s.addEventListener("change",e=>{slots[+e.target.dataset.slot]=e.target.value||null;document.getElementById("goalSelect").value="custom";renderSlots();renderOutputs();}));
+}
+function renderOutputs(){
+  if(!current)return;
+  const clean=slots.filter(Boolean),t=effectTotals(slots),mode=document.getElementById("itemMode").value,base=mode==="snack"?"Poké Snack":"Poké Bait";
+  const ingredients=slots.map(n=>n?`<span class="ingredient ${SEASONINGS[n].gold?"gold":""}">${esc(n)}</span>`:`<span class="ingredient">Empty Slot</span>`).join("");
+  document.getElementById("recipeOutput").innerHTML=`<div class="recipebox"><h3>${esc(base)}</h3><div style="margin:8px 0">${ingredients}</div><p><b>Target:</b> ${esc(current.name)}</p><p class="small">${clean.length===3?"Complete recipe ready.":"Choose all 3 seasoning slots for a complete recipe."}</p>${slots.includes("Enchanted Golden Apple")?`<p style="color:#ffd34f"><b>Optional Enchanted Golden Apple:</b> selected manually. It is available, but the recommendation system does not prioritize it.</p>`:""}</div>`;
+  const cards=[];
+  if(t.shiny!==1)cards.push(["Shiny",t.shiny+"×","Starf Berry effects stack multiplicatively"]);
+  if(t.rarity)cards.push(["Rarity","+"+t.rarity+" tier","Golden Carrot / Glistering Melon Slice"]);
+  if(t.bite)cards.push(["Bite time","-"+t.bite+"%","Shorter bite time"]);
+  if(t.reel)cards.push(["Reel chance","boosted","Custap / Micle"]);
+  if(t.level)cards.push(["Lured level","+"+t.level,"Leppa / Hopo"]);
+  if(t.ability)cards.push(["Hidden Ability",t.ability+"%","Enigma Berry"]);
+  if(t.friendship)cards.push(["Friendship","+"+t.friendship,"Jaboca Berry"]);
+  if(t.drops)cards.push(["Drops","rerolled","Rowap Berry"]);
+  const targetSlots=clean.filter(n=>matching(current,n));
+  cards.push(["Target attraction",targetSlots.length?targetSlots.join(" + "):"None selected","Matching type / egg-group bait"]);
+  document.getElementById("effects").innerHTML=cards.map(c=>`<div class="effect"><b>${esc(c[1])}</b>${esc(c[0])}<div class="small">${esc(c[2])}</div></div>`).join("");
+  document.getElementById("bestIngredients").innerHTML=`<div>${targetBaits(current).map(o=>`<span class="pill target">${esc(o.bait)} — ${esc(o.reason)}</span>`).join("")||"<span class=\"muted\">No matching target seasoning mapped.</span>"}</div><p class="small" style="margin-top:10px">For shiny hunting, the default recommendation is Starf Berry + Golden Carrot + a matching target seasoning. For maximum shiny, Starf Berry is stacked. For maximum rarity, Golden Carrot is stacked. Enchanted Golden Apple remains available manually but is not prioritized.</p>`;
+}
+function openBuilder(name,rarity){
+  const x=all.find(v=>v.name===name&&(!rarity||v.rarity===rarity))||all.find(v=>v.name===name);
+  if(!x)return;
+  current=x;document.getElementById("pokeSelect").value=x.name;slots=preset(document.getElementById("goalSelect").value,x);renderSelected();showTab("builder");
+}
+function openPokemon(x){
+  const forms=Array.isArray(x.forms)&&x.forms.length?x.forms:[{id:x.pokemon_id,identifier:'default',form_identifier:'default',is_default:true}];
+  const usable=forms.filter(f=>f.id);
+  document.getElementById("modalTitle").textContent=x.name;
+  document.getElementById("modalBody").innerHTML=`
+    <div class="details">
+      <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+        <img class="modal-poke-img" src="${artworkUrl(x.pokemon_id)||spriteUrl(x)}" alt="${esc(x.name)}" onerror="this.src='${spriteUrl(x)}'">
+        <div><h3 style="font-size:25px;margin:0 0 8px">${esc(x.name)}</h3><b>Rarity:</b> ${esc(x.rarity||"Multiple")}<br><b>Type(s):</b> ${(x.types||[]).map(t=>`<span class="type">${esc(t)}</span>`).join(" ")||"Unknown"}<br><b>Egg Group(s):</b> ${esc((x.groups||[]).join(", ")||"Unknown")}<br><b>Biome(s):</b> ${esc(x.biomes||"Unknown")}</div>
+      </div>
+      <hr style="border-color:#263851">
+      <h3>🎨 Color / Form Variants</h3>
+      <p class="small">These are the visual variants available for this species in the public PokeAPI sprite set. The public spawn table does not expose a complete list of which specific forms Complex Cobblemon allows, so these are shown as reference variants rather than a guarantee that every form spawns on Complex.</p>
+      <div class="variant-grid">${usable.map(f=>`<div class="variant-card"><img src="${artworkUrl(f.id)||spriteUrl({pokemon_id:f.id})}" alt="${esc(formLabel(f))}" loading="lazy" onerror="this.src='${spriteUrl({pokemon_id:f.id})}'"><b>${esc(formLabel(f))}</b><div class="small">${f.is_default?'Default form':'Alternate form'}</div></div>`).join("")}</div>
+      <h3 style="margin-top:18px">✨ Shiny Variant</h3>
+      <div class="shiny-row">${usable.map(f=>`<div class="shiny-card"><img src="${artworkUrl(f.id,true)||spriteUrl({pokemon_id:f.id},true)}" alt="Shiny ${esc(formLabel(f))}" loading="lazy" onerror="this.src='${spriteUrl({pokemon_id:f.id},true)}'"><div><b>Shiny — ${esc(formLabel(f))}</b></div></div>`).join("")}</div>
+      <hr style="border-color:#263851">
+      <b>Best target ingredients:</b><div style="margin-top:7px">${targetBaits(x).map(o=>`<span class="pill target">${esc(o.bait)} — ${esc(o.reason)}</span>`).join("")||"None mapped"}</div>
+      <div style="margin-top:16px"><button class="btn primary" id="modalBuild">🧪 Build Recipe for ${esc(x.name)}</button></div>
+    </div>`;
+  document.getElementById("modal").classList.remove("hidden");
+  document.getElementById("modalBuild").onclick=()=>{document.getElementById("modal").classList.add("hidden");openBuilder(x.name,x.rarity)};
+}
+function renderList(){
+  const rows=filteredPokemon(),biomeSelected=!!document.getElementById("biomeFilter").value,totalPages=biomeSelected?1:Math.max(1,Math.ceil(rows.length/pageSize));
+  if(currentPage>totalPages)currentPage=totalPages;
+  const page=biomeSelected?rows:rows.slice((currentPage-1)*pageSize,currentPage*pageSize),saved=new Set(JSON.parse(localStorage.getItem("cobblemon-shiny-checklist")||"[]"));
+  const grid=document.getElementById("pokemonGrid"); grid.classList.toggle("compact",compactMode);
+  grid.innerHTML=page.map(x=>`<article class="poke-card">
+    <button class="star-btn" data-star="${esc(x.name)}" title="Add to shiny checklist">${saved.has(x.name)?"★":"☆"}</button>
+    <div class="sprite-wrap" data-view="${esc(x.name)}"><img loading="lazy" src="${artworkUrl(x.pokemon_id)||spriteUrl(x)}" alt="${esc(x.name)}" onerror="this.src='${spriteUrl(x)}'"></div>
+    <div class="dex-number">#${String(dexNum(x)).padStart(4,"0")}</div>
+    <div class="pokemon-name">${esc(x.name)}</div>
+    <div class="type-row">${(x.types||[]).map(t=>`<span class="type">${esc(t)}</span>`).join("")}</div>
+    <div class="mini-actions"><button data-view="${esc(x.name)}">Details</button><button class="recipe-mini" data-build="${esc(x.name)}">Recipe</button></div>
+  </article>`).join("");
+  grid.querySelectorAll("[data-view]").forEach(el=>{el.onclick=()=>{const x=rows.find(v=>v.name===el.dataset.view);if(x){current=x;renderSelectedHome(x)}};el.ondblclick=()=>{const x=rows.find(v=>v.name===el.dataset.view);if(x)openPokemon(x)}});
+  grid.querySelectorAll("[data-build]").forEach(el=>el.onclick=()=>{const x=rows.find(v=>v.name===el.dataset.build);if(x){current=x;slots=preset("balanced",x);renderSelected();showTab("builder")}});
+  grid.querySelectorAll("[data-star]").forEach(el=>el.onclick=()=>checklistToggle(el.dataset.star));
+  const bf=document.getElementById("biomeFilter").value;
+  document.getElementById("status").innerHTML=`Showing <b style="color:#ff52d8">${rows.length.toLocaleString()}</b> Pokémon <span class="muted">(${bf?esc(bf)+" • all matching Pokémon • ":""}Pokédex Order)</span>`;
+
+  const p=document.getElementById("pagination");p.innerHTML="";
+  const add=(label,pageNo,active=false)=>{const b=document.createElement("button");b.textContent=label;b.classList.toggle("active",active);b.onclick=()=>{currentPage=pageNo;renderList();document.getElementById("pokemonSection").scrollIntoView({behavior:"smooth",block:"start"})};p.appendChild(b)};
+  if(!biomeSelected && totalPages>1){
+    if(currentPage>1)add("←",currentPage-1);
+    const nums=[1,currentPage-2,currentPage-1,currentPage,currentPage+1,currentPage+2,totalPages].filter((v,i,a)=>v>=1&&v<=totalPages&&a.indexOf(v)===i).sort((a,b)=>a-b);
+    let last=0; nums.forEach(n=>{if(last&&n-last>1){const s=document.createElement("span");s.textContent="…";s.style.padding="8px 3px";p.appendChild(s)}add(String(n),n,n===currentPage);last=n});
+    if(currentPage<totalPages)add("→",currentPage+1);
+  }
+}
+function fillFilters(){
+  const biomes=[...new Set(all.flatMap(x=>biomesOf(x)))].sort(),types=[...new Set(all.flatMap(x=>x.types||[]))].sort(),eggs=[...new Set(all.flatMap(x=>x.groups||[]))].sort();
+  document.getElementById("biomeFilter").innerHTML='<option value="">All Biomes</option>'+biomes.map(x=>`<option>${esc(x)}</option>`).join("");
+  document.getElementById("typeFilter").innerHTML='<option value="">All Types</option>'+types.map(x=>`<option>${esc(x)}</option>`).join("");
+  document.getElementById("eggFilter").innerHTML='<option value="">All Egg Groups</option>'+eggs.map(x=>`<option>${esc(x)}</option>`).join("");
+  renderBiomeRows();
+}
+function fillSelect(){
+  const uniq=uniquePokemon(all).sort((a,b)=>dexNum(a)-dexNum(b)||a.name.localeCompare(b.name));
+  document.getElementById("pokeSelect").innerHTML=uniq.map(x=>`<option value="${esc(x.name)}">${esc(x.name)}</option>`).join("");
+}
+function renderSeasonings(){
+  const q=document.getElementById("seasoningSearch").value.toLowerCase(),f=document.getElementById("seasoningFilter").value;
+  const body=document.getElementById("seasoningTable");body.innerHTML="";
+  names.filter(n=>{const e=SEASONINGS[n],hay=(n+" "+e.desc).toLowerCase();return (!q||hay.includes(q))&&(!f||e.cat===f)}).forEach(n=>{
+    const e=SEASONINGS[n],tr=document.createElement("tr");tr.className="seasoning-row";
+    tr.innerHTML=`<td><b>${esc(n)}</b>${e.gold?` <span class="pill gold">Optional</span>`:""}</td><td>${esc(e.desc)}</td><td>${e.type?esc("Type: "+e.type.join(", ")):e.egg?esc("Egg: "+e.egg.join(", ")):e.shiny?"Shiny chance":e.rarity?"Rarity":e.bite?"Faster bites":e.level?"Lured level":"Special"}</td><td><button class="btn">Use in Recipe</button></td>`;
+    tr.querySelector("button").onclick=(ev)=>{ev.stopPropagation();if(!current){current=all[0];}slots[0]=n;showTab("builder");renderSelected()};
+    tr.onclick=()=>{const d=document.getElementById("seasoningDetails");d.classList.remove("hidden");d.innerHTML=`<b>${esc(n)}</b><br>${esc(e.desc)}<br><span class="small">Category: ${esc(e.cat)}${e.gold?" · Optional and not prioritized":""}</span>`};
+    body.appendChild(tr);
+  });
+}
+function setup(){
+  document.querySelectorAll(".nav-btn").forEach(b=>b.onclick=()=>{
+    document.querySelectorAll(".nav-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+    const n=b.dataset.nav;
+    if(n==="home"){showTab("list");window.scrollTo({top:0,behavior:"smooth"})}
+    if(n==="pokemon"){showTab("list");document.getElementById("pokemonSection").scrollIntoView({behavior:"smooth",block:"start"})}
+    if(n==="biomes"){showTab("list");document.getElementById("biomePanel").classList.add("open");document.getElementById("biomePanel").scrollIntoView({behavior:"smooth",block:"start"})}
+    if(n==="builder")showTab("builder");
+    if(n==="items")showTab("seasonings");
+    if(n==="guide"||n==="about")showTab("about");
+  });
+  document.getElementById("closeBiomes").onclick=()=>document.getElementById("biomePanel").classList.remove("open");
+  document.getElementById("darkToggle").onclick=()=>document.body.classList.toggle("dim-ui");
+
+  ["search","biomeFilter","rarityFilter","typeFilter","eggFilter","formFilter"].forEach(id=>document.getElementById(id).addEventListener(id==="search"?"input":"change",()=>{
+    currentPage=1;
+    if(id==="biomeFilter"){const b=document.getElementById("biomeFilter").value;document.querySelectorAll(".biome-row").forEach(x=>x.classList.toggle("active",(x.dataset.biome||"")===b));refreshAmbient(b);const card=document.getElementById("currentBiomeCard");card.querySelector(".current-biome-art").textContent=b?biomeIcon(b):"🌸";card.querySelector("b").textContent=b||"All Biomes";}
+    renderList();
+  }));
+  document.getElementById("sortMode").onchange=()=>{currentPage=1;renderList()};
+  document.getElementById("clearFilters").onclick=()=>{["search","biomeFilter","rarityFilter","typeFilter","eggFilter","formFilter"].forEach(id=>document.getElementById(id).value="");selectBiome("")};
+  document.getElementById("gridView").onclick=()=>{compactMode=false;document.getElementById("gridView").classList.add("active");document.getElementById("compactView").classList.remove("active");renderList()};
+  document.getElementById("compactView").onclick=()=>{compactMode=true;document.getElementById("compactView").classList.add("active");document.getElementById("gridView").classList.remove("active");renderList()};
+  document.getElementById("randomPokemon").onclick=()=>{const u=filteredPokemon();if(!u.length)return;const x=u[Math.floor(Math.random()*u.length)];current=x;renderSelectedHome(x);openPokemon(x)};
+
+  document.getElementById("quickSnack").onclick=()=>{document.getElementById("itemMode").value="snack";document.getElementById("quickSnack").classList.add("active");document.getElementById("quickBait").classList.remove("active");if(current)renderOutputs()};
+  document.getElementById("quickBait").onclick=()=>{document.getElementById("itemMode").value="bait";document.getElementById("quickBait").classList.add("active");document.getElementById("quickSnack").classList.remove("active");if(current)renderOutputs()};
+  document.getElementById("quickClear").onclick=()=>{slots=[null,null,null];renderQuickSlots();if(current)renderSelected()};
+  document.getElementById("quickShow").onclick=()=>{if(!current)current=uniquePokemon(all)[0];renderSelected();showTab("builder")};
+  document.getElementById("findRecipe").onclick=()=>{if(!current)current=uniquePokemon(all)[0];slots=preset("balanced",current);renderSelected();showTab("builder")};
+  document.getElementById("viewSpawns").onclick=()=>{if(current){const b=biomesOf(current)[0];if(b)selectBiome(b)}};
+  document.getElementById("addChecklist").onclick=()=>{if(current)checklistToggle(current.name)};
+  document.getElementById("viewAllSeasonings").onclick=()=>showTab("seasonings");
+
+  document.getElementById("goalSelect").onchange=()=>{if(current&&document.getElementById("goalSelect").value!=="custom"){slots=preset(document.getElementById("goalSelect").value,current);renderSelected()}};
+  document.getElementById("applyGoal").onclick=()=>{if(current){slots=preset(document.getElementById("goalSelect").value,current);renderSelected()}};
+  document.getElementById("clearSlots").onclick=()=>{slots=[null,null,null];document.getElementById("goalSelect").value="custom";renderSelected()};
+  document.getElementById("itemMode").onchange=()=>{renderOutputs();renderQuickSlots()};
+  document.getElementById("pokeSelect").onchange=e=>{current=all.find(x=>x.name===e.target.value)||null;slots=preset(document.getElementById("goalSelect").value,current);renderSelected()};
+  document.getElementById("seasoningSearch").oninput=renderSeasonings;document.getElementById("seasoningFilter").onchange=renderSeasonings;
+  document.getElementById("modalClose").onclick=()=>document.getElementById("modal").classList.add("hidden");
+  document.getElementById("modal").onclick=e=>{if(e.target.id==="modal")document.getElementById("modal").classList.add("hidden")};
+  document.querySelectorAll(".accordion button").forEach(b=>b.onclick=()=>document.getElementById("acc-"+b.dataset.acc).classList.toggle("hidden"));
+}
+function main(){
+  setup();renderSeasonings();
+  try{
+    const rows=Array.isArray(window.COBBLEMON_SPAWN_DATA)?window.COBBLEMON_SPAWN_DATA:[];
+    all=rows.map(r=>({...r,types:r.types||[],groups:r.groups||[]}));
+    if(!all.length){
+      document.getElementById("dataStatus").textContent="Waiting for embedded data";
+      document.getElementById("dataUpdated").textContent="The automatic updater will populate the database.";
+      document.getElementById("status").textContent="The automatic updater is preparing the embedded spawn database. Refresh after the first GitHub Actions update finishes.";
+      return;
+    }
+    fillFilters();fillSelect();current=null;slots=[null,null,null];renderSelectedHome(null);renderQuickSlots();renderSeasoningPreview();refreshAmbient("");renderList();
+    const species=new Set(all.map(x=>x.name)).size,stamp=window.COBBLEMON_SPAWN_META?.updated_utc?new Date(window.COBBLEMON_SPAWN_META.updated_utc).toLocaleString():"unknown";
+    document.getElementById("dataStatus").textContent="Up to date";document.getElementById("dataUpdated").textContent=`${species.toLocaleString()} species • Last updated: ${stamp}`;
+  }catch(err){console.error(err);document.getElementById("dataStatus").textContent="Data error";document.getElementById("dataUpdated").textContent="Refresh the page or check the updater."}
+}
+main();
+</script>
+</body>
+</html>
