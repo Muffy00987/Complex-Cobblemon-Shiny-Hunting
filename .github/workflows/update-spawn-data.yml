@@ -1,0 +1,43 @@
+name: Update Cobblemon Spawn Data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 0,6,12,18 * * *"
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "data/spawn-data.js"
+
+permissions:
+  contents: write
+
+jobs:
+  update-spawn-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Update spawn data
+        run: python update_spawn_data.py
+
+      - name: Commit updated spawn data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- data/spawn-data.js; then
+            echo "No spawn data changes."
+          else
+            git add data/spawn-data.js
+            git commit -m "[skip ci] Update spawn data"
+            git push
+          fi
