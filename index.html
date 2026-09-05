@@ -87,74 +87,350 @@ tr.data-row:hover{background:rgba(57,118,238,.08)}
 .close{border:0;background:#1a2a42;color:#fff;border-radius:6px;padding:8px 12px;font-weight:900}
 @media(max-width:1200px){.guidegrid{grid-template-columns:repeat(3,1fr)}.buildergrid{grid-template-columns:1fr}.sticky{position:static}.filters{grid-template-columns:1fr 1fr}.statusbox{min-width:230px}}
 @media(max-width:720px){header{padding:15px 12px 0}.headrow{display:block}.statusbox{margin-top:12px}.brandline{font-size:14px}h1{font-size:24px}.tab{padding:12px 10px;font-size:13px}main{padding:12px}.guidegrid{grid-template-columns:1fr 1fr}.filters,.grid2,.seasoning-tools{grid-template-columns:1fr}.slotgrid{grid-template-columns:1fr}}
+
+/* === Final game-dashboard redesign === */
+:root{
+  --pink:#ff4dd8;--pink2:#d23ce9;--violet:#8a5cff;--cyan:#58d8ff;--lime:#76d94f;
+  --glass:rgba(7,15,28,.92);--glass2:rgba(12,22,39,.94);--stroke:#38516d;--stroke2:#536a85;
+}
+body{
+  margin:0;color:#f4f7fb;background:#06101b;
+  background-image:
+    radial-gradient(circle at 12% 15%,rgba(255,65,204,.22),transparent 24%),
+    radial-gradient(circle at 84% 10%,rgba(255,143,84,.17),transparent 26%),
+    linear-gradient(180deg,#192a4d 0%,#10273b 42%,#07131f 100%);
+  background-attachment:fixed;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.45;
+  background:
+    radial-gradient(circle,rgba(255,159,225,.9) 0 2px,transparent 3px) 0 0/93px 93px,
+    radial-gradient(circle,rgba(255,221,241,.8) 0 1.6px,transparent 2.5px) 37px 21px/137px 137px;
+  animation:petals 18s linear infinite;
+}
+@keyframes petals{to{background-position:93px 186px,174px 274px}}
+body.mood-dark{background-image:radial-gradient(circle at 20% 12%,rgba(117,50,174,.26),transparent 25%),linear-gradient(180deg,#170d28,#0d1424 44%,#050a12)}
+body.mood-water{background-image:radial-gradient(circle at 75% 10%,rgba(88,195,255,.24),transparent 28%),linear-gradient(180deg,#183e67,#0b344d 48%,#06121f)}
+body.mood-desert{background-image:radial-gradient(circle at 74% 8%,rgba(255,202,97,.28),transparent 23%),linear-gradient(180deg,#73462f,#4e342d 48%,#18151c)}
+body.mood-cold{background-image:radial-gradient(circle at 50% 0%,rgba(231,249,255,.31),transparent 31%),linear-gradient(180deg,#4a6681,#21384f 46%,#0b1723)}
+body.mood-floral{background-image:radial-gradient(circle at 14% 12%,rgba(255,91,213,.33),transparent 27%),radial-gradient(circle at 82% 8%,rgba(255,178,98,.22),transparent 26%),linear-gradient(180deg,#55385e,#315267 45%,#12353c 70%,#07131c)}
+
+.site-header{padding:0 22px;background:transparent;border:0;position:relative;top:auto;z-index:20}
+.top-nav{
+  max-width:1400px;margin:auto;min-height:49px;display:flex;justify-content:space-between;align-items:center;
+  background:rgba(11,13,29,.95);border:1px solid rgba(255,255,255,.08);border-top:0;border-radius:0 0 17px 17px;
+  box-shadow:0 14px 34px rgba(0,0,0,.33);backdrop-filter:blur(18px);overflow:hidden
+}
+.nav-cluster{display:flex;align-items:stretch;overflow-x:auto}
+.nav-btn,.dark-toggle{border:0;background:transparent;color:#eff3f8;padding:13px 15px;font-weight:700;white-space:nowrap}
+.nav-btn:hover,.nav-btn.active{color:#ff77e1}.nav-btn.active{box-shadow:inset 0 -3px var(--pink)}
+.dark-toggle{display:flex;gap:9px;align-items:center;background:#151225;border-left:1px solid rgba(255,255,255,.08)}
+.dark-toggle i{display:inline-block;width:39px;height:21px;border-radius:999px;background:linear-gradient(90deg,#d03ae8,#ff5fd8);position:relative}
+.dark-toggle i::after{content:"";position:absolute;right:2px;top:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:.2s}
+body.dim-ui .dark-toggle i::after{right:20px}
+
+.hero-art{
+  max-width:1400px;height:218px;margin:0 auto;position:relative;overflow:hidden;
+  background-image:url("assets/approved_hero.png");
+  background-size:cover;background-position:center top;border-radius:0 0 4px 4px;
+  box-shadow:0 20px 50px rgba(0,0,0,.28)
+}
+.hero-tint{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,6,16,.03),rgba(3,8,17,.08) 70%,rgba(3,9,17,.50));pointer-events:none}
+body.mood-dark .hero-art{filter:saturate(.75) hue-rotate(28deg) brightness(.62)}
+body.mood-water .hero-art{filter:saturate(.78) hue-rotate(305deg) brightness(.78)}
+body.mood-desert .hero-art{filter:saturate(.83) hue-rotate(335deg) sepia(.20) brightness(.85)}
+body.mood-cold .hero-art{filter:saturate(.55) hue-rotate(320deg) brightness(.92)}
+body.dim-ui .hero-art{filter:brightness(.62) saturate(.75)}
+.ambient-layer{position:absolute;inset:0;pointer-events:none}
+.ambient-mon{position:absolute;bottom:-11px;opacity:0;transform:translateY(15px) scale(.92);transition:opacity .55s,transform .55s;filter:drop-shadow(0 13px 12px rgba(0,0,0,.52))}
+.ambient-mon.show{opacity:1;transform:translateY(0) scale(1)}
+.ambient-mon img{width:124px;height:124px;object-fit:contain}
+.ambient-mon.a{left:2%}.ambient-mon.b{left:14%;bottom:-22px}.ambient-mon.c{right:14%;bottom:-22px}.ambient-mon.d{right:2%}
+.ambient-mon.b img,.ambient-mon.c img{width:94px;height:94px}
+.hero-status{position:absolute;right:13px;bottom:8px;background:rgba(5,12,23,.78);border:1px solid rgba(255,255,255,.15);padding:5px 9px;border-radius:8px;font-size:10px;backdrop-filter:blur(8px)}
+.hero-status small{margin-left:6px;color:#aeb9c9}.live-dot{color:#29de7c}
+
+main{max-width:1500px;padding:0 18px 40px}
+.home-search{max-width:1050px;margin:-4px auto 12px;position:relative;z-index:25}
+.search-line{display:grid;grid-template-columns:auto 1fr auto;align-items:center;background:rgba(7,14,27,.96);border:1px solid #68748a;border-radius:9px;overflow:hidden;box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.magnify{font-size:25px;padding-left:14px}.search-line input{border:0;background:transparent;box-shadow:none;padding:12px 13px;font-size:15px}
+.random-button{align-self:stretch;padding:0 18px;border:0;border-left:1px solid #566178;background:#171729;color:#fff;font-weight:800}
+.filter-line{display:grid;grid-template-columns:repeat(5,1fr) auto;gap:7px;margin-top:9px}
+.filter-line select,.clear-button{border:1px solid #465b75;background:rgba(11,20,35,.95);color:#fff;border-radius:7px;padding:9px 10px}.clear-button{cursor:pointer}
+
+.dashboard{display:grid;grid-template-columns:265px minmax(0,1fr) 315px;gap:12px;align-items:start}
+.panel{background:linear-gradient(155deg,rgba(11,20,35,.96),rgba(6,14,26,.94));border:1px solid #3b526c;border-radius:12px;box-shadow:0 12px 31px rgba(0,0,0,.29);backdrop-filter:blur(14px)}
+.biome-panel{padding:9px;position:sticky;top:8px;max-height:76vh;overflow:auto}
+.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 7px 9px;font-size:16px}.mobile-close{display:none;border:0;background:transparent;color:#9eb0c5;font-size:23px}
+.biome-row{width:100%;display:flex;justify-content:space-between;align-items:center;border:0;background:transparent;color:#fff;border-radius:7px;padding:8px 9px;text-align:left}
+.biome-row:hover{background:rgba(255,255,255,.055)}.biome-row.active{background:linear-gradient(90deg,rgba(255,58,205,.43),rgba(143,43,194,.21));outline:1px solid rgba(255,101,221,.57)}
+.biome-row em{font-style:normal;background:#202b3d;border-radius:999px;padding:2px 7px;font-size:11px}
+.current-biome-card{margin-top:9px;border:1px solid #39536d;border-radius:9px;overflow:hidden;text-align:center;padding-bottom:7px}.current-biome-art{height:54px;display:flex;align-items:center;justify-content:center;font-size:35px;background:linear-gradient(135deg,#8f3d7a,#e05eaa 48%,#5a73a3)}.current-biome-card small{display:block;color:#aeb9c9;margin-top:5px}
+
+.dex-column{min-width:0}.dex-toolbar{display:flex;justify-content:space-between;align-items:center;margin:3px 0 9px}.sort-tools{display:flex;align-items:center;gap:7px}.sort-tools select{width:auto;padding:7px 9px}.view-switch{width:37px;height:35px;border:1px solid #475b73;background:#101a2b;color:#fff;border-radius:7px;font-size:19px}.view-switch.active{border-color:#ff55d9;color:#ff68dc;box-shadow:0 0 0 2px rgba(255,82,215,.14)}
+.pokemon-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.poke-card{position:relative;background:linear-gradient(155deg,rgba(15,29,46,.98),rgba(6,15,27,.98));border:1px solid #3c5570;border-radius:10px;padding:8px;min-height:211px;overflow:hidden;transition:.16s}
+.poke-card:hover{transform:translateY(-2px);border-color:#ff5ad9;box-shadow:0 10px 24px rgba(0,0,0,.3)}
+.star-btn{position:absolute;top:5px;right:6px;border:0;background:transparent;color:#ffd84f;font-size:20px;z-index:2}
+.sprite-wrap{height:108px;display:flex;align-items:center;justify-content:center;cursor:pointer}.sprite-wrap img{width:110px;height:110px;object-fit:contain;filter:drop-shadow(0 7px 8px rgba(0,0,0,.42))}
+.dex-number{font-size:10px;color:#abb7c7}.pokemon-name{font-weight:900;font-size:14px}.type-row{margin-top:5px}
+.type{border-radius:999px;padding:4px 10px;font-size:10px;margin:2px 2px 0 0}
+.mini-actions{display:flex;gap:5px;margin-top:7px}.mini-actions button{flex:1;border:1px solid #435a74;background:#111d2f;color:#fff;border-radius:6px;padding:5px;font-size:10px}.mini-actions .recipe-mini{background:linear-gradient(90deg,#bf36e2,#ff4fd0);border-color:#e65ddb}
+.pokemon-grid.compact{grid-template-columns:1fr}.compact .poke-card{min-height:70px;display:grid;grid-template-columns:72px 78px 150px 1fr 150px;align-items:center;gap:8px}.compact .sprite-wrap{height:58px}.compact .sprite-wrap img{width:58px;height:58px}
+.pagination{display:flex;justify-content:center;gap:5px;margin-top:10px}.pagination button{min-width:33px;height:33px;border-radius:7px;border:1px solid #354a62;background:#111b2b;color:#fff}.pagination button.active{background:#ff52d7;border-color:#ff77e2;color:#10131b}
+
+.right-column{display:grid;gap:9px;position:sticky;top:8px}.right-column>.panel{padding:10px}
+.help-chip{border:1px solid #7587a0;background:transparent;color:#dce7f4;width:22px;height:22px;border-radius:50%}
+.quick-mode{display:grid;grid-template-columns:1fr 1fr;border:1px solid #526078;border-radius:7px;overflow:hidden}.quick-mode button{border:0;background:#121d2e;color:#fff;padding:8px}.quick-mode button.active{background:linear-gradient(90deg,#dd42eb,#ff50d0)}
+.quick-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.quick-slot{min-height:88px;border:1px solid #465a73;border-radius:7px;background:#132036;text-align:center;padding:6px 4px;font-size:10px;display:flex;flex-direction:column;justify-content:center;gap:4px}.quick-slot strong{font-size:23px;font-weight:400}.quick-slot select{font-size:9px;padding:5px;background:#091523}
+.quick-builder-actions{display:grid;grid-template-columns:1fr 1.35fr;gap:6px;margin-top:8px}.quick-builder-actions button{border:1px solid #475a71;background:#142136;color:#fff;border-radius:6px;padding:8px}.quick-builder-actions .accent{background:linear-gradient(90deg,#c237e5,#ff4ecf)}
+.selected-empty{text-align:center;border:1px solid #344b65;border-radius:8px;padding:22px 8px;color:#f2f5f9}.selected-empty small{display:block;color:#aeb9c9;margin-top:5px}
+.selected-card{display:grid;grid-template-columns:80px 1fr;gap:8px;align-items:center}.selected-card img{width:78px;height:78px;object-fit:contain}.selected-card small{color:#aeb9c9}
+.quick-actions button{width:100%;margin-top:5px;text-align:left;border:1px solid #43566f;background:#111d2e;color:#fff;border-radius:6px;padding:8px}
+.seasoning-preview .panel-heading button{border:0;background:transparent;color:#ffc1f1;font-size:10px}.seasoning-preview-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}.seasoning-dot{height:30px;border:1px solid #374b62;background:#111a29;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px}
+
+#tab-builder,#tab-seasonings,#tab-about{max-width:1400px;margin:0 auto}#tab-builder .card,#tab-seasonings .card,#tab-about .card{background:linear-gradient(155deg,rgba(12,21,36,.97),rgba(6,14,25,.96));border-radius:12px}
+.buildergrid{grid-template-columns:420px 1fr}.sticky{top:8px}.modalbox{background:linear-gradient(155deg,#101d31,#110f23);border-radius:14px;border-color:#66537d}
+
+.site-footer{width:100%;background:#07111d;border-top:1px solid #2d4057;color:#b9c4d2;padding:11px 23px;display:flex;justify-content:space-between;gap:12px;font-size:10px}.footer-logo{font-weight:1000;font-size:17px;background:linear-gradient(90deg,#52d7ff,#72e582,#ffe464,#ff67d7,#8c7aff);-webkit-background-clip:text;color:transparent}
+
+@media(max-width:1280px){.dashboard{grid-template-columns:220px minmax(0,1fr)}.right-column{grid-column:1/-1;position:static;grid-template-columns:repeat(4,1fr)}.pokemon-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:920px){.nav-btn span,.dark-toggle span{display:none}.hero-art{height:190px}.dashboard{grid-template-columns:1fr}.biome-panel{position:fixed;left:8px;top:56px;bottom:8px;width:265px;z-index:120;transform:translateX(-115%);transition:.24s}.biome-panel.open{transform:none}.mobile-close{display:block}.pokemon-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.right-column{grid-template-columns:1fr 1fr}.filter-line{grid-template-columns:1fr 1fr 1fr}.buildergrid{grid-template-columns:1fr}}
+@media(max-width:620px){.site-header{padding:0 6px}.hero-art{height:150px}.ambient-mon.b,.ambient-mon.c{display:none}.ambient-mon img{width:85px;height:85px}.pokemon-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.right-column{grid-template-columns:1fr}.filter-line{grid-template-columns:1fr 1fr}.search-line{grid-template-columns:auto 1fr}.random-button{font-size:0}.random-button::after{content:"⤨";font-size:18px}.compact .poke-card{grid-template-columns:60px 1fr}.compact .poke-card>*:nth-child(n+3){grid-column:2}.site-footer{display:block;text-align:center}.site-footer>div{margin:4px 0}}
+
+
+/* === Exact approved mockup alignment overrides === */
+body{
+  background-image:
+    linear-gradient(rgba(2,8,16,.58),rgba(2,8,16,.70)),
+    url("assets/approved_ambience.jpg") !important;
+  background-size:cover !important;
+  background-position:center top !important;
+}
+.site-header{padding:0 22px !important}
+.top-nav{
+  max-width:none !important;
+  width:calc(100% - 136px) !important;
+  margin:0 68px !important;
+  min-height:49px !important;
+  border-radius:0 0 13px 13px !important;
+}
+.nav-btn{padding:13px 16px !important;font-size:14px !important}
+.dark-toggle{padding:13px 17px !important}
+
+.hero-art{
+  max-width:none !important;
+  width:100% !important;
+  height:211px !important;
+  margin:0 !important;
+  background-size:cover !important;
+  background-position:center top !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+.hero-status{display:none !important}
+.ambient-layer{z-index:3}
+.ambient-mon{bottom:-12px}
+.ambient-mon img{width:112px;height:112px}
+
+main{
+  max-width:none !important;
+  width:100% !important;
+  padding:0 22px 22px !important;
+}
+.home-search{
+  max-width:none !important;
+  width:790px !important;
+  margin:-3px 0 10px 349px !important;
+}
+.search-line{height:44px !important;border-radius:8px !important}
+.search-line input{font-size:14px !important}
+.filter-line{
+  grid-template-columns:145px 139px 142px 159px 176px 1fr !important;
+  gap:8px !important;
+}
+.filter-line select{height:37px !important;padding:7px 10px !important;font-size:12px !important}
+.clear-button{font-size:11px !important}
+
+.dashboard{
+  grid-template-columns:266px minmax(0, 1fr) 315px !important;
+  gap:12px !important;
+}
+.biome-panel{
+  padding:9px !important;
+  border-radius:12px !important;
+  max-height:none !important;
+  position:relative !important;
+  top:auto !important;
+}
+.panel-heading{font-size:15px !important;padding:4px 7px 8px !important}
+.biome-row{padding:7px 9px !important;font-size:12px !important}
+.biome-row em{font-size:10px !important}
+
+.dex-toolbar{height:40px !important;margin:0 0 8px !important}
+#status{font-size:14px !important}
+.sort-tools{font-size:12px !important}
+.sort-tools select{height:35px !important;font-size:11px !important}
+
+.pokemon-grid{
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+  gap:7px !important;
+}
+.poke-card{
+  min-height:160px !important;
+  height:160px !important;
+  padding:7px !important;
+  border-radius:9px !important;
+}
+.sprite-wrap{height:88px !important}
+.sprite-wrap img{width:91px !important;height:91px !important}
+.dex-number{font-size:9px !important}
+.pokemon-name{font-size:13px !important}
+.type{font-size:9px !important;padding:3px 9px !important}
+.mini-actions{display:none !important}
+.star-btn{font-size:18px !important}
+
+.right-column{gap:9px !important;position:relative !important;top:auto !important}
+.right-column>.panel{padding:10px !important;border-radius:12px !important}
+.quick-builder-panel{min-height:240px}
+.quick-slots{gap:6px !important}
+.quick-slot{min-height:87px !important}
+.selected-empty{padding:26px 8px !important}
+.quick-actions button{padding:7px 8px !important;font-size:11px !important}
+.seasoning-preview-grid{gap:4px !important}
+
+.pagination{margin-top:9px !important}
+.pagination button{height:32px !important;min-width:32px !important}
+
+.site-footer{
+  padding:9px 23px !important;
+  min-height:49px !important;
+  align-items:center !important;
+}
+
+@media(max-width:1300px){
+  .top-nav{width:calc(100% - 24px) !important;margin:0 12px !important}
+  .home-search{width:calc(100% - 360px) !important;margin-left:285px !important}
+  .dashboard{grid-template-columns:225px minmax(0,1fr) 285px !important}
+}
+@media(max-width:1000px){
+  .home-search{width:100% !important;margin:0 0 10px !important}
+  .dashboard{grid-template-columns:1fr !important}
+  .biome-panel,.right-column{position:static !important}
+  .pokemon-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important}
+}
+
 </style>
 </head>
 <body>
-<header>
-  <div class="headrow">
-    <div class="brand">
-      <div class="ball">🔴</div>
-      <div>
-        <h1><span style="color:#ff4b45">COBBLEMON</span> <span style="color:#ffd32a">SHINY</span> <span style="color:#54e34d">HUNTING</span> <span style="color:#fff">–</span> <span style="color:#b95cff">INTERACTIVE</span> <span style="color:#fff">REFERENCE</span></h1>
-        <div class="brandline">Biome-grouped public spawn list • Interactive Poké Snack / Poké Bait recipe builder • Auto-updating data</div>
-        <div class="brandline"><span style="color:#ffd34f;font-weight:800">Includes Enchanted Golden Apples as an optional choice — not prioritized</span></div>
-      </div>
+
+<header class="site-header">
+  <div class="top-nav">
+    <div class="nav-cluster">
+      <button class="nav-btn active" data-nav="home">⌂ <span>Home</span></button>
+      <button class="nav-btn" data-nav="pokemon">◉ <span>Pokémon</span></button>
+      <button class="nav-btn" data-nav="biomes">♟ <span>Biomes</span></button>
+      <button class="nav-btn" data-nav="builder">☷ <span>Recipe Builder</span></button>
+      <button class="nav-btn" data-nav="items">▣ <span>Items</span></button>
+      <button class="nav-btn" data-nav="guide">ⓘ <span>Shiny Guide</span></button>
+      <button class="nav-btn" data-nav="about">ⓘ <span>About</span></button>
     </div>
-    <div class="statusbox"><b>● DATA STATUS</b><strong id="dataStatus">Checking embedded data…</strong><small id="dataUpdated"></small></div>
+    <button class="dark-toggle" id="darkToggle">☀ <span>Dark Mode</span><i></i></button>
   </div>
-  <nav>
-    <button class="tab active" data-tab="list">🌍 Spawn List</button>
-    <button class="tab" data-tab="builder">🧪 Recipe Builder</button>
-    <button class="tab" data-tab="seasonings">🍓 Seasonings</button>
-    <button class="tab" data-tab="about">ℹ️ About & Disclaimer</button>
-  </nav>
+
+  <div class="hero-art" id="heroArt">
+    <div class="hero-tint"></div>
+    <div class="ambient-layer" id="ambientLayer" aria-hidden="true"></div>
+    <div class="hero-status">
+      <span class="live-dot">●</span>
+      <span id="dataStatus">Checking data…</span>
+      <small id="dataUpdated"></small>
+    </div>
+  </div>
 </header>
 
+
 <main>
+
 <section id="tab-list">
-  <div class="card disclaimer">
-    <h2>⚠️ Complex Cobblemon Limitation / Disclaimer</h2>
-    <div>This reference uses the public/base Cobblemon spawn data available to the updater. Complex Cobblemon may use custom spawn pools, server-side datapacks, disabled Pokémon, altered rarity weights, altered biome conditions, or other server-specific changes. Because those private/server-side changes are not publicly exposed in a complete machine-readable list, <b>this page cannot guarantee that every listed spawn, rarity, biome, or encounter rate matches Complex Cobblemon exactly.</b></div>
-    <div style="margin-top:8px">Use this as a helpful general guide, but always verify in-game for the most accurate information.</div>
-  </div>
-
-  <div class="card">
-    <h2>📘 How to Use This List</h2>
-    <div>Find a Pokémon, then click <b>Build Recipe</b> to create the best Poké Snack or Poké Bait for your goal.</div>
-    <div class="guidegrid">
-      <div class="guideitem"><b>⭐ Shiny + Rarity</b><p>Best overall for shiny chance and finding rarer spawns.</p></div>
-      <div class="guideitem"><b>✨ Max Shiny + Target</b><p>Maximize shiny odds while strongly attracting the target.</p></div>
-      <div class="guideitem"><b>🎯 Max Target Attraction</b><p>Prioritize attracting the target as often as possible.</p></div>
-      <div class="guideitem"><b>👑 Max Rarity</b><p>Focus on increasing the chance of rarer Pokémon.</p></div>
-      <div class="guideitem"><b>⚡ Faster Bites</b><p>Speeds up bite rate and reel-in time.</p></div>
-      <div class="guideitem"><b>⬆️ Higher Lured Level</b><p>Increases the level of the lured Pokémon.</p></div>
+  <div class="home-search">
+    <div class="search-line">
+      <span class="magnify">⌕</span>
+      <input id="search" placeholder="Search Pokémon... (by name or #)">
+      <button id="randomPokemon" class="random-button">⤨ Random</button>
     </div>
-    <p class="small" style="margin-top:18px">You can customize any recipe by changing the three seasoning slots. <span style="color:#ffd34f;font-weight:800">Enchanted Golden Apples</span> are available as an option, but the automatic recommendations will favor ordinary ingredients unless the apple is specifically chosen.</p>
-  </div>
-
-  <div class="card">
-    <div id="status" class="small" style="font-weight:800;margin-bottom:12px">Loading…</div>
-    <div class="filters">
-      <div><label for="search">Search Pokémon</label><input id="search" placeholder="Search by name, type, egg group, or biome…"></div>
-      <div><label for="biomeFilter">Filter by Biome</label><select id="biomeFilter"><option value="">All Biomes</option></select></div>
-      <div><label for="rarityFilter">Filter by Rarity</label><select id="rarityFilter"><option value="">All Rarities</option><option>common</option><option>uncommon</option><option>rare</option><option>ultra-rare</option></select></div>
-      <div><label for="typeFilter">Filter by Type</label><select id="typeFilter"><option value="">All Types</option></select></div>
-      <button class="btn" id="clearFilters">⟳ Clear Filters</button>
+    <div class="filter-line">
+      <select id="biomeFilter"><option value="">All Biomes</option></select>
+      <select id="typeFilter"><option value="">All Types</option></select>
+      <select id="rarityFilter"><option value="">All Rarities</option><option>common</option><option>uncommon</option><option>rare</option><option>ultra-rare</option></select>
+      <select id="eggFilter"><option value="">All Egg Groups</option></select>
+      <select id="formFilter"><option value="">All Forms</option><option value="variants">Variants Available</option></select>
+      <button id="clearFilters" class="clear-button">Clear</button>
     </div>
   </div>
 
-  <div class="card" style="padding:0">
-    <div class="table-wrap">
-      <table id="spawn">
-        <thead><tr>
-          <th class="sortable" data-sort="name">Pokémon ↕</th>
-          <th class="sortable" data-sort="rarity">Rarity ↕</th>
-          <th class="sortable" data-sort="biomes">Biome(s) ↕</th>
-          <th>Type(s)</th><th>Egg Group(s)</th><th>Best Target Ingredients</th><th>Build Recipe</th>
-        </tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
+  <div class="dashboard">
+    <aside class="panel biome-panel" id="biomePanel">
+      <div class="panel-heading"><b>🍃 Biomes</b><button class="mobile-close" id="closeBiomes">×</button></div>
+      <button class="biome-row active" data-biome=""><span>🌐 All Biomes</span><em id="allBiomeCount">0</em></button>
+      <div id="biomeRows"></div>
+      <div class="current-biome-card" id="currentBiomeCard">
+        <div class="current-biome-art">🌸</div>
+        <small>Current Biome</small>
+        <b>All Biomes</b>
+      </div>
+    </aside>
+
+    <section class="dex-column" id="pokemonSection">
+      <div class="dex-toolbar">
+        <div id="status"><b>Loading Pokémon…</b></div>
+        <div class="sort-tools">
+          <span>Sort:</span>
+          <select id="sortMode">
+            <option value="dex">Pokédex Number</option>
+            <option value="name">Name</option>
+            <option value="rarity">Rarity</option>
+          </select>
+          <button id="gridView" class="view-switch active">▦</button>
+          <button id="compactView" class="view-switch">☷</button>
+        </div>
+      </div>
+
+      <div id="pokemonGrid" class="pokemon-grid"></div>
+      <div id="pagination" class="pagination"></div>
+    </section>
+
+    <aside class="right-column">
+      <div class="panel quick-builder-panel">
+        <div class="panel-heading"><b>🍲 Recipe Builder</b><button class="help-chip" title="Quick builder uses the same three seasoning slots as the full builder.">?</button></div>
+        <div class="quick-mode">
+          <button id="quickSnack" class="active">Poké Snacks</button>
+          <button id="quickBait">Poké Bait</button>
+        </div>
+        <div id="quickSlots" class="quick-slots"></div>
+        <div class="quick-builder-actions">
+          <button id="quickClear">Clear All</button>
+          <button id="quickShow" class="accent">Show Results →</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-heading"><b>⭐ Selected Pokémon</b></div>
+        <div id="selectedHome" class="selected-empty">No Pokémon selected<br><small>Click a Pokémon to view details, spawns, and recipe suggestions.</small></div>
+      </div>
+
+      <div class="panel quick-actions">
+        <div class="panel-heading"><b>✦ Quick Actions</b></div>
+        <button id="findRecipe">✨ Find Shiny Recipes</button>
+        <button id="viewSpawns">♟ View Spawn Locations</button>
+        <button id="addChecklist">☑ Add to Checklist</button>
+      </div>
+
+      <div class="panel seasoning-preview">
+        <div class="panel-heading"><b>🍃 Seasoning Reference</b><button id="viewAllSeasonings">View All →</button></div>
+        <div id="seasoningPreview" class="seasoning-preview-grid"></div>
+      </div>
+    </aside>
   </div>
 </section>
 
@@ -236,6 +512,13 @@ tr.data-row:hover{background:rgba(57,118,238,.08)}
 </section>
 </main>
 
+<footer class="site-footer">
+  <div><span class="footer-logo">COMPLEX</span> &nbsp; Cobblemon Shiny Hunting Tool &nbsp;|&nbsp; Built for Adventurers</div>
+  <div>Not affiliated with Mojang, Nintendo, or The Pokémon Company.</div>
+  <div><span class="live-dot">●</span> Data auto-updated via GitHub Actions</div>
+</footer>
+
+
 <div id="modal" class="modal hidden"><div class="modalbox"><div class="modalhead"><h2 id="modalTitle">Pokémon</h2><button class="close" id="modalClose">✕</button></div><div id="modalBody"></div></div></div>
 
 <script src="data/spawn-data.js"></script>
@@ -306,7 +589,7 @@ const SEASONINGS={
 "Watmel Berry":{nature:["speed"],desc:"Speed nature attraction (100)",cat:"special"}
 };
 const names=Object.keys(SEASONINGS);
-let all=[],current=null,slots=[null,null,null],sortKey="name",sortAsc=true;
+let all=[],current=null,slots=[null,null,null],sortKey="name",sortAsc=true,compactMode=false,currentPage=1,pageSize=20,ambientTimer=null;
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 function spriteUrl(x, shiny=false){
@@ -321,6 +604,103 @@ function formLabel(f){
   if(!raw || raw==='default') return 'Default';
   return raw.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
 }
+
+function dexNum(x){const n=Number(x?.pokemon_id||999999);return Number.isFinite(n)?n:999999}
+function biomesOf(x){return (x.biomes||"").split(",").map(v=>v.trim()).filter(Boolean)}
+function uniquePokemon(rows){
+  const m=new Map();
+  rows.forEach(x=>{
+    if(!m.has(x.name))m.set(x.name,{...x,_biomes:new Set(),_rarities:new Set()});
+    const y=m.get(x.name);
+    biomesOf(x).forEach(b=>y._biomes.add(b)); if(x.rarity)y._rarities.add(x.rarity);
+    if(!y.pokemon_id&&x.pokemon_id)y.pokemon_id=x.pokemon_id;
+    if((x.forms||[]).length>(y.forms||[]).length)y.forms=x.forms;
+    if((x.types||[]).length>(y.types||[]).length)y.types=x.types;
+    if((x.groups||[]).length>(y.groups||[]).length)y.groups=x.groups;
+  });
+  return [...m.values()].map(x=>({...x,biomes:[...x._biomes].join(", "),rarity:[...x._rarities][0]||x.rarity}));
+}
+function rarityRank(r){return {"common":1,"uncommon":2,"rare":3,"ultra-rare":4}[String(r||"").toLowerCase()]||9}
+function setMood(biome){
+  document.body.classList.remove("mood-dark","mood-water","mood-desert","mood-cold","mood-floral");
+  const b=(biome||"").toLowerCase();
+  if(/nether|end|cave|swamp|dark|deep|haunt/.test(b))document.body.classList.add("mood-dark");
+  else if(/ocean|river|beach|water|lake/.test(b))document.body.classList.add("mood-water");
+  else if(/desert|badland|savanna/.test(b))document.body.classList.add("mood-desert");
+  else if(/snow|ice|cold|frozen|mountain/.test(b))document.body.classList.add("mood-cold");
+  else document.body.classList.add("mood-floral");
+}
+function moodScore(x,biome){
+  const b=(biome||"").toLowerCase(),t=(x.types||[]).map(v=>v.toLowerCase()); let s=0;
+  if(/cherry|floral|flower|grove|forest|plain|meadow/.test(b)){if(t.includes("fairy"))s+=10;if(t.includes("grass"))s+=7;if(t.includes("normal"))s+=4;if(t.includes("bug"))s+=2}
+  else if(/nether|end|cave|swamp|dark|deep|haunt/.test(b)){if(t.includes("ghost"))s+=10;if(t.includes("dark"))s+=9;if(t.includes("poison"))s+=5;if(t.includes("psychic"))s+=3}
+  else if(/ocean|river|beach|water|lake/.test(b)){if(t.includes("water"))s+=10;if(t.includes("ice"))s+=3}
+  else if(/desert|badland|savanna/.test(b)){if(t.includes("ground"))s+=9;if(t.includes("rock"))s+=8;if(t.includes("fire"))s+=5}
+  else if(/snow|ice|cold|frozen|mountain/.test(b)){if(t.includes("ice"))s+=10;if(t.includes("rock"))s+=4;if(t.includes("flying"))s+=2}
+  return s;
+}
+function ambientCandidates(biome){
+  const u=uniquePokemon(all); let c=biome?u.filter(x=>biomesOf(x).includes(biome)):u;
+  c=c.filter(x=>x.pokemon_id).sort((a,b)=>moodScore(b,biome)-moodScore(a,biome)||dexNum(a)-dexNum(b));
+  return c.length?c:u.filter(x=>x.pokemon_id);
+}
+function refreshAmbient(biome){
+  if(ambientTimer)clearInterval(ambientTimer); setMood(biome);
+  const layer=document.getElementById("ambientLayer"); if(!layer)return; let offset=0;
+  const draw=()=>{
+    const c=ambientCandidates(biome); if(!c.length)return;
+    const picks=[0,1,2,3].map(i=>c[(offset+i)%c.length]); offset=(offset+2)%Math.max(1,c.length);
+    layer.innerHTML=picks.map((x,i)=>`<div class="ambient-mon ${["a","b","c","d"][i]}"><img src="${artworkUrl(x.pokemon_id)||spriteUrl(x)}" alt=""></div>`).join("");
+    requestAnimationFrame(()=>layer.querySelectorAll(".ambient-mon").forEach((n,i)=>setTimeout(()=>n.classList.add("show"),80*i)));
+  };
+  draw(); ambientTimer=setInterval(draw,8500);
+}
+function biomeIcon(b){
+  return /cherry|floral|flower|grove/i.test(b)?"🌸":/forest/i.test(b)?"🌲":/plain|meadow/i.test(b)?"🌿":/mountain|hill/i.test(b)?"⛰️":/beach/i.test(b)?"🏝️":/desert/i.test(b)?"🌵":/badland/i.test(b)?"🟧":/swamp/i.test(b)?"🌳":/river/i.test(b)?"💧":/ocean/i.test(b)?"🌊":/nether/i.test(b)?"🔥":/end/i.test(b)?"👁️":/cave/i.test(b)?"💎":"◆";
+}
+function renderBiomeRows(){
+  const counts={}; uniquePokemon(all).forEach(x=>biomesOf(x).forEach(b=>counts[b]=(counts[b]||0)+1));
+  document.getElementById("allBiomeCount").textContent=uniquePokemon(all).length.toLocaleString();
+  document.getElementById("biomeRows").innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([b,c])=>`<button class="biome-row" data-biome="${esc(b)}"><span>${biomeIcon(b)} ${esc(b)}</span><em>${c}</em></button>`).join("");
+  document.querySelectorAll(".biome-row").forEach(btn=>btn.onclick=()=>selectBiome(btn.dataset.biome||""));
+}
+function selectBiome(biome){
+  document.getElementById("biomeFilter").value=biome||"";
+  document.querySelectorAll(".biome-row").forEach(b=>b.classList.toggle("active",(b.dataset.biome||"")===(biome||"")));
+  const card=document.getElementById("currentBiomeCard");
+  card.querySelector(".current-biome-art").textContent=biome?biomeIcon(biome):"🌸";
+  card.querySelector("b").textContent=biome||"All Biomes";
+  currentPage=1; refreshAmbient(biome); renderList(); document.getElementById("biomePanel").classList.remove("open");
+}
+function filteredPokemon(){
+  const q=document.getElementById("search").value.toLowerCase().trim(),bf=document.getElementById("biomeFilter").value,rf=document.getElementById("rarityFilter").value,tf=document.getElementById("typeFilter").value,ef=document.getElementById("eggFilter").value,ff=document.getElementById("formFilter").value,sm=document.getElementById("sortMode").value;
+  let rows=uniquePokemon(all).filter(x=>{
+    const hay=`${x.name} ${dexNum(x)} ${x.rarity} ${x.biomes} ${(x.types||[]).join(" ")} ${(x.groups||[]).join(" ")}`.toLowerCase();
+    return (!q||hay.includes(q))&&(!bf||biomesOf(x).includes(bf))&&(!rf||x.rarity===rf)&&(!tf||(x.types||[]).includes(tf))&&(!ef||(x.groups||[]).includes(ef))&&(!ff||(x.forms||[]).length>1);
+  });
+  rows.sort((a,b)=>sm==="name"?a.name.localeCompare(b.name):sm==="rarity"?rarityRank(a.rarity)-rarityRank(b.rarity)||dexNum(a)-dexNum(b):dexNum(a)-dexNum(b)||a.name.localeCompare(b.name));
+  return rows;
+}
+function renderSelectedHome(x){
+  const el=document.getElementById("selectedHome"); if(!x){el.className="selected-empty";el.innerHTML='No Pokémon selected<br><small>Click a Pokémon to view details, spawns, and recipe suggestions.</small>';return}
+  el.className="selected-card";
+  el.innerHTML=`<img src="${artworkUrl(x.pokemon_id)||spriteUrl(x)}" alt="${esc(x.name)}"><div><b>${esc(x.name)}</b><br><small>#${String(dexNum(x)).padStart(4,"0")} • ${esc(x.rarity||"")}</small><br>${(x.types||[]).map(t=>`<span class="type">${esc(t)}</span>`).join("")}<br><small>${esc(x.biomes||"Unknown biome")}</small></div>`;
+}
+function renderQuickSlots(){
+  const el=document.getElementById("quickSlots"); if(!el)return;
+  el.innerHTML=slots.map((n,i)=>`<div class="quick-slot"><strong>${n?"✦":"+"}</strong><span>${n?esc(n):"Add Seasoning"}</span><select data-qslot="${i}"><option value="">— Empty —</option>${names.map(s=>`<option value="${esc(s)}" ${s===n?"selected":""}>${esc(s)}</option>`).join("")}</select></div>`).join("");
+  el.querySelectorAll("select").forEach(s=>s.onchange=e=>{slots[+e.target.dataset.qslot]=e.target.value||null;document.getElementById("goalSelect").value="custom";renderQuickSlots();if(current)renderOutputs()});
+}
+function renderSeasoningPreview(){
+  const icons=["🍓","🫐","🍋","🍏","🥥","🍊","🟧","🟫","⬜","🟩","🥚","🟣"];
+  document.getElementById("seasoningPreview").innerHTML=names.slice(0,12).map((n,i)=>`<button class="seasoning-dot" data-season="${esc(n)}" title="${esc(n)}">${icons[i]||"◆"}</button>`).join("");
+  document.querySelectorAll(".seasoning-dot").forEach(b=>b.onclick=()=>{slots[0]=b.dataset.season;renderQuickSlots();if(current)renderSelected()});
+}
+function checklistToggle(name){
+  const key="cobblemon-shiny-checklist",s=new Set(JSON.parse(localStorage.getItem(key)||"[]"));
+  s.has(name)?s.delete(name):s.add(name);localStorage.setItem(key,JSON.stringify([...s]));renderList();
+}
+
 function targetBaits(x){
   const out=[],types=(x.types||[]),groups=(x.groups||[]).map(g=>g.toLowerCase());
   types.forEach(t=>{if(TYPE_BAIT[t])out.push({bait:TYPE_BAIT[t],reason:t+" type"});});
@@ -355,7 +735,7 @@ function renderTargetOptions(x){
 function renderSelected(){
   if(!current)return;
   document.getElementById("selectedInfo").innerHTML=`<b style="font-size:18px">${esc(current.name)}</b><br><span class="muted">Type:</span> ${(current.types||[]).map(t=>`<span class="type">${esc(t)}</span>`).join(" ")||"Unknown"}<br><span class="muted">Egg Group(s):</span> ${esc((current.groups||[]).join(" / ")||"Unknown")}<br><span class="muted">Spawn rarity:</span> <b>${esc(current.rarity||"Multiple")}</b>`;
-  renderTargetOptions(current);renderSlots();renderOutputs();
+  renderTargetOptions(current);renderSlots();renderOutputs();renderSelectedHome(current);renderQuickSlots();
 }
 function renderSlots(){
   const el=document.getElementById("slots");
@@ -410,35 +790,42 @@ function openPokemon(x){
   document.getElementById("modalBuild").onclick=()=>{document.getElementById("modal").classList.add("hidden");openBuilder(x.name,x.rarity)};
 }
 function renderList(){
-  const q=document.getElementById("search").value.toLowerCase(),bf=document.getElementById("biomeFilter").value,rf=document.getElementById("rarityFilter").value,tf=document.getElementById("typeFilter").value;
-  let rows=all.filter(x=>{
-    const hay=`${x.name} ${x.rarity} ${x.biomes} ${(x.types||[]).join(" ")} ${(x.groups||[]).join(" ")}`.toLowerCase();
-    return (!q||hay.includes(q))&&(!bf||(x.biomes||"").split(",").map(s=>s.trim()).includes(bf))&&(!rf||x.rarity===rf)&&(!tf||(x.types||[]).includes(tf));
-  });
-  rows.sort((a,b)=>{let av=(a[sortKey]||"").toString().toLowerCase(),bv=(b[sortKey]||"").toString().toLowerCase();return (av>bv?1:av<bv?-1:0)*(sortAsc?1:-1)});
-  const body=document.querySelector("#spawn tbody");body.innerHTML="";
-  const grouped=new Map();rows.forEach(x=>{const bs=(x.biomes||"Unknown").split(",").map(b=>b.trim()).filter(Boolean);(bs.length?bs:["Unknown"]).forEach(b=>{if(!grouped.has(b))grouped.set(b,[]);grouped.get(b).push(x)})});
-  [...grouped.keys()].sort().forEach(b=>{
-    const h=document.createElement("tr");h.className="biome-row";h.innerHTML=`<td colspan="7">🌍 ${esc(b)} — ${grouped.get(b).length} spawn entries</td>`;body.appendChild(h);
-    grouped.get(b).forEach(x=>{
-      const tr=document.createElement("tr");tr.className="data-row";
-      const target=targetBaits(x),quick=target[0]?.bait||"Starf Berry";
-      tr.innerHTML=`<td><button class="btn ghost view" style="padding:5px 8px;font-weight:900;display:flex;align-items:center"><img class="poke-img" src="${spriteUrl(x)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>${esc(x.name)}</span></button></td><td><span class="badge ${esc(x.rarity)}">${esc(x.rarity)}</span></td><td>${esc(b)}</td><td>${(x.types||[]).map(t=>`<span class="type">${esc(t)}</span>`).join("")||"—"}</td><td>${esc((x.groups||[]).join(", ")||"—")}</td><td>${target.map(o=>`<span class="pill target">${esc(o.bait)}</span>`).join("")||"—"}</td><td><button class="btn primary build">🧪 Build Recipe</button></td>`;
-      tr.querySelector(".view").onclick=()=>openPokemon(x);
-      tr.querySelector(".build").onclick=()=>openBuilder(x.name,x.rarity);
-      body.appendChild(tr);
-    });
-  });
-  document.getElementById("status").textContent=`Showing ${rows.length.toLocaleString()} embedded spawn rows. Click a Pokémon name for details or Build Recipe to jump into the builder.`;
+  const rows=filteredPokemon(),totalPages=Math.max(1,Math.ceil(rows.length/pageSize));
+  if(currentPage>totalPages)currentPage=totalPages;
+  const page=rows.slice((currentPage-1)*pageSize,currentPage*pageSize),saved=new Set(JSON.parse(localStorage.getItem("cobblemon-shiny-checklist")||"[]"));
+  const grid=document.getElementById("pokemonGrid"); grid.classList.toggle("compact",compactMode);
+  grid.innerHTML=page.map(x=>`<article class="poke-card">
+    <button class="star-btn" data-star="${esc(x.name)}" title="Add to shiny checklist">${saved.has(x.name)?"★":"☆"}</button>
+    <div class="sprite-wrap" data-view="${esc(x.name)}"><img loading="lazy" src="${artworkUrl(x.pokemon_id)||spriteUrl(x)}" alt="${esc(x.name)}" onerror="this.src='${spriteUrl(x)}'"></div>
+    <div class="dex-number">#${String(dexNum(x)).padStart(4,"0")}</div>
+    <div class="pokemon-name">${esc(x.name)}</div>
+    <div class="type-row">${(x.types||[]).map(t=>`<span class="type">${esc(t)}</span>`).join("")}</div>
+    <div class="mini-actions"><button data-view="${esc(x.name)}">Details</button><button class="recipe-mini" data-build="${esc(x.name)}">Recipe</button></div>
+  </article>`).join("");
+  grid.querySelectorAll("[data-view]").forEach(el=>{el.onclick=()=>{const x=rows.find(v=>v.name===el.dataset.view);if(x){current=x;renderSelectedHome(x)}};el.ondblclick=()=>{const x=rows.find(v=>v.name===el.dataset.view);if(x)openPokemon(x)}});
+  grid.querySelectorAll("[data-build]").forEach(el=>el.onclick=()=>{const x=rows.find(v=>v.name===el.dataset.build);if(x){current=x;slots=preset("balanced",x);renderSelected();showTab("builder")}});
+  grid.querySelectorAll("[data-star]").forEach(el=>el.onclick=()=>checklistToggle(el.dataset.star));
+  const bf=document.getElementById("biomeFilter").value;
+  document.getElementById("status").innerHTML=`Showing <b style="color:#ff52d8">${rows.length.toLocaleString()}</b> Pokémon <span class="muted">(${bf?esc(bf)+" • ":""}Pokédex Order)</span>`;
+
+  const p=document.getElementById("pagination");p.innerHTML="";
+  const add=(label,pageNo,active=false)=>{const b=document.createElement("button");b.textContent=label;b.classList.toggle("active",active);b.onclick=()=>{currentPage=pageNo;renderList();document.getElementById("pokemonSection").scrollIntoView({behavior:"smooth",block:"start"})};p.appendChild(b)};
+  if(totalPages>1){
+    if(currentPage>1)add("←",currentPage-1);
+    const nums=[1,currentPage-2,currentPage-1,currentPage,currentPage+1,currentPage+2,totalPages].filter((v,i,a)=>v>=1&&v<=totalPages&&a.indexOf(v)===i).sort((a,b)=>a-b);
+    let last=0; nums.forEach(n=>{if(last&&n-last>1){const s=document.createElement("span");s.textContent="…";s.style.padding="8px 3px";p.appendChild(s)}add(String(n),n,n===currentPage);last=n});
+    if(currentPage<totalPages)add("→",currentPage+1);
+  }
 }
 function fillFilters(){
-  const biomes=[...new Set(all.flatMap(x=>(x.biomes||"").split(",").map(s=>s.trim()).filter(Boolean)))].sort();
-  const types=[...new Set(all.flatMap(x=>x.types||[]))].sort();
+  const biomes=[...new Set(all.flatMap(x=>biomesOf(x)))].sort(),types=[...new Set(all.flatMap(x=>x.types||[]))].sort(),eggs=[...new Set(all.flatMap(x=>x.groups||[]))].sort();
   document.getElementById("biomeFilter").innerHTML='<option value="">All Biomes</option>'+biomes.map(x=>`<option>${esc(x)}</option>`).join("");
   document.getElementById("typeFilter").innerHTML='<option value="">All Types</option>'+types.map(x=>`<option>${esc(x)}</option>`).join("");
+  document.getElementById("eggFilter").innerHTML='<option value="">All Egg Groups</option>'+eggs.map(x=>`<option>${esc(x)}</option>`).join("");
+  renderBiomeRows();
 }
 function fillSelect(){
-  const uniq=[...new Map(all.map(x=>[x.name,x])).values()].sort((a,b)=>a.name.localeCompare(b.name));
+  const uniq=uniquePokemon(all).sort((a,b)=>dexNum(a)-dexNum(b)||a.name.localeCompare(b.name));
   document.getElementById("pokeSelect").innerHTML=uniq.map(x=>`<option value="${esc(x.name)}">${esc(x.name)}</option>`).join("");
 }
 function renderSeasonings(){
@@ -453,14 +840,43 @@ function renderSeasonings(){
   });
 }
 function setup(){
-  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-  ["search","biomeFilter","rarityFilter","typeFilter"].forEach(id=>document.getElementById(id).addEventListener(id==="search"?"input":"change",renderList));
-  document.getElementById("clearFilters").onclick=()=>{["search","biomeFilter","rarityFilter","typeFilter"].forEach(id=>document.getElementById(id).value="");renderList()};
-  document.querySelectorAll("th.sortable").forEach(th=>th.onclick=()=>{const k=th.dataset.sort;if(sortKey===k)sortAsc=!sortAsc;else{sortKey=k;sortAsc=true}renderList()});
+  document.querySelectorAll(".nav-btn").forEach(b=>b.onclick=()=>{
+    document.querySelectorAll(".nav-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+    const n=b.dataset.nav;
+    if(n==="home"){showTab("list");window.scrollTo({top:0,behavior:"smooth"})}
+    if(n==="pokemon"){showTab("list");document.getElementById("pokemonSection").scrollIntoView({behavior:"smooth",block:"start"})}
+    if(n==="biomes"){showTab("list");document.getElementById("biomePanel").classList.add("open");document.getElementById("biomePanel").scrollIntoView({behavior:"smooth",block:"start"})}
+    if(n==="builder")showTab("builder");
+    if(n==="items")showTab("seasonings");
+    if(n==="guide"||n==="about")showTab("about");
+  });
+  document.getElementById("closeBiomes").onclick=()=>document.getElementById("biomePanel").classList.remove("open");
+  document.getElementById("darkToggle").onclick=()=>document.body.classList.toggle("dim-ui");
+
+  ["search","biomeFilter","rarityFilter","typeFilter","eggFilter","formFilter"].forEach(id=>document.getElementById(id).addEventListener(id==="search"?"input":"change",()=>{
+    currentPage=1;
+    if(id==="biomeFilter"){const b=document.getElementById("biomeFilter").value;document.querySelectorAll(".biome-row").forEach(x=>x.classList.toggle("active",(x.dataset.biome||"")===b));refreshAmbient(b);const card=document.getElementById("currentBiomeCard");card.querySelector(".current-biome-art").textContent=b?biomeIcon(b):"🌸";card.querySelector("b").textContent=b||"All Biomes";}
+    renderList();
+  }));
+  document.getElementById("sortMode").onchange=()=>{currentPage=1;renderList()};
+  document.getElementById("clearFilters").onclick=()=>{["search","biomeFilter","rarityFilter","typeFilter","eggFilter","formFilter"].forEach(id=>document.getElementById(id).value="");selectBiome("")};
+  document.getElementById("gridView").onclick=()=>{compactMode=false;document.getElementById("gridView").classList.add("active");document.getElementById("compactView").classList.remove("active");renderList()};
+  document.getElementById("compactView").onclick=()=>{compactMode=true;document.getElementById("compactView").classList.add("active");document.getElementById("gridView").classList.remove("active");renderList()};
+  document.getElementById("randomPokemon").onclick=()=>{const u=filteredPokemon();if(!u.length)return;const x=u[Math.floor(Math.random()*u.length)];current=x;renderSelectedHome(x);openPokemon(x)};
+
+  document.getElementById("quickSnack").onclick=()=>{document.getElementById("itemMode").value="snack";document.getElementById("quickSnack").classList.add("active");document.getElementById("quickBait").classList.remove("active");if(current)renderOutputs()};
+  document.getElementById("quickBait").onclick=()=>{document.getElementById("itemMode").value="bait";document.getElementById("quickBait").classList.add("active");document.getElementById("quickSnack").classList.remove("active");if(current)renderOutputs()};
+  document.getElementById("quickClear").onclick=()=>{slots=[null,null,null];renderQuickSlots();if(current)renderSelected()};
+  document.getElementById("quickShow").onclick=()=>{if(!current)current=uniquePokemon(all)[0];renderSelected();showTab("builder")};
+  document.getElementById("findRecipe").onclick=()=>{if(!current)current=uniquePokemon(all)[0];slots=preset("balanced",current);renderSelected();showTab("builder")};
+  document.getElementById("viewSpawns").onclick=()=>{if(current){const b=biomesOf(current)[0];if(b)selectBiome(b)}};
+  document.getElementById("addChecklist").onclick=()=>{if(current)checklistToggle(current.name)};
+  document.getElementById("viewAllSeasonings").onclick=()=>showTab("seasonings");
+
   document.getElementById("goalSelect").onchange=()=>{if(current&&document.getElementById("goalSelect").value!=="custom"){slots=preset(document.getElementById("goalSelect").value,current);renderSelected()}};
   document.getElementById("applyGoal").onclick=()=>{if(current){slots=preset(document.getElementById("goalSelect").value,current);renderSelected()}};
   document.getElementById("clearSlots").onclick=()=>{slots=[null,null,null];document.getElementById("goalSelect").value="custom";renderSelected()};
-  document.getElementById("itemMode").onchange=renderOutputs;
+  document.getElementById("itemMode").onchange=()=>{renderOutputs();renderQuickSlots()};
   document.getElementById("pokeSelect").onchange=e=>{current=all.find(x=>x.name===e.target.value)||null;slots=preset(document.getElementById("goalSelect").value,current);renderSelected()};
   document.getElementById("seasoningSearch").oninput=renderSeasonings;document.getElementById("seasoningFilter").onchange=renderSeasonings;
   document.getElementById("modalClose").onclick=()=>document.getElementById("modal").classList.add("hidden");
@@ -478,7 +894,7 @@ function main(){
       document.getElementById("status").textContent="The automatic updater is preparing the embedded spawn database. Refresh after the first GitHub Actions update finishes.";
       return;
     }
-    fillFilters();fillSelect();current=all.find(x=>x.name==="Charmander")||all[0];slots=preset("balanced",current);renderSelected();renderList();
+    fillFilters();fillSelect();current=null;slots=[null,null,null];renderSelectedHome(null);renderQuickSlots();renderSeasoningPreview();refreshAmbient("");renderList();
     const species=new Set(all.map(x=>x.name)).size,stamp=window.COBBLEMON_SPAWN_META?.updated_utc?new Date(window.COBBLEMON_SPAWN_META.updated_utc).toLocaleString():"unknown";
     document.getElementById("dataStatus").textContent="Up to date";document.getElementById("dataUpdated").textContent=`${species.toLocaleString()} species • Last updated: ${stamp}`;
   }catch(err){console.error(err);document.getElementById("dataStatus").textContent="Data error";document.getElementById("dataUpdated").textContent="Refresh the page or check the updater."}
