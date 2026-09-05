@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cobblemon Shiny Hunting – Complete</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f4f6f8;color:#1f2937}
+header{background:#202938;color:#fff;padding:22px 26px;position:sticky;top:0;z-index:10}
+h1{margin:0 0 6px}.sub{opacity:.85}
+main{padding:20px;max-width:1900px;margin:auto}.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:18px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+input{width:100%;box-sizing:border-box;padding:11px;border:1px solid #cbd5e1;border-radius:7px;font-size:15px}
+.table-wrap{overflow:auto;max-height:72vh;border:1px solid #ddd;border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:7px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:top}
+th{position:sticky;top:0;background:#eef2f7;z-index:2}.badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#e5e7eb;margin:2px;font-weight:700}
+.small{font-size:13px;color:#4b5563}.status{font-weight:700}a{color:#2563eb}
+</style>
+</head>
+<body>
+<header><h1>🍖 Cobblemon Shiny Hunting – Complete Reference</h1><div class="sub">No Enchanted Golden Apples • Biome-grouped complete public spawn table • Chrome-friendly</div></header>
+<main>
+<div class="card">
+<h2>Recipes</h2>
+<p><b>⭐ Shiny + Rarity:</b> Starf Berry + Golden Carrot + target Type/Egg-Group bait</p>
+<p><b>✨ Maximum Shiny:</b> Starf Berry + Starf Berry + target Type/Egg-Group bait</p>
+<p><b>👑 Maximum Rarity:</b> Golden Carrot + Golden Carrot + Golden Carrot</p>
+<p><b>🎯 Maximum Type/Egg Attraction:</b> 3× matching type/egg-group bait</p>
+<p class="small">Starf gives a 5× shiny modifier and Golden Carrot gives +1 rarity tier; matching bait provides a 10× attraction effect and same-effect seasonings stack. <a href="https://wiki.cobblemon.com/index.php/Seasoning" target="_blank">Cobblemon seasoning reference</a>.</p>
+</div>
+<div class="card">
+<div id="status" class="status">Loading the complete public spawn table…</div>
+<p class="small">Source: <a href="https://raw.githubusercontent.com/hspahic-cs/cobblemon-server/main/docs/spawn-lookup.md" target="_blank">public spawn lookup</a>. These are base/public rows and may not match Complex Cobblemon's custom server pool.</p>
+<input id="search" placeholder="Search Pokémon, biome, rarity, type, egg group, or recipe…">
+</div>
+<div class="card"><div class="table-wrap"><table id="spawn"><thead><tr>
+<th>Pokémon</th><th>Rarity</th><th>Biome</th><th>Type</th><th>Egg Group(s)</th><th>Shiny + Rarity</th><th>Max Rarity</th><th>Type / Egg Recipe</th>
+</tr></thead><tbody></tbody></table></div></div>
+<div class="card small"><b>Important:</b> The HTML list is live-loaded so it can include every species represented in the linked public spawn table. Pokémon outside that spawn table will not appear as spawn targets.</div>
+</main>
+<script>
+const SOURCE="https://raw.githubusercontent.com/hspahic-cs/cobblemon-server/main/docs/spawn-lookup.md";
+const TYPE_BAIT={Bug:"Spelon Berry",Dark:"Colbur Berry",Dragon:"Haban Berry",Electric:"Wacan Berry",Fairy:"Roseli Berry",Fighting:"Chople Berry",Fire:"Occa Berry",Flying:"Coba Berry",Ghost:"Kasib Berry",Grass:"Rindo Berry",Ground:"Shuca Berry",Ice:"Yache Berry",Normal:"Chilan Berry",Poison:"Kebia Berry",Psychic:"Payapa Berry",Rock:"Charti Berry",Steel:"Babiri Berry",Water:"Passho Berry"};
+const EGG_BAIT={"dragon":"Lum Berry","monster":"Lum Berry","field":"Rawst Berry","human-like":"Chesto Berry","flying":"Chesto Berry","water 3":"Pecha Berry","bug":"Pecha Berry","fairy":"Cheri Berry","grass":"Cheri Berry","water 1":"Aspear Berry","water 2":"Aspear Berry","mineral":"Persim Berry","amorphous":"Persim Berry"};
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+function parseRows(text){
+ const doc=new DOMParser().parseFromString(text,"text/html");
+ return [...doc.querySelectorAll("tr")].map(r=>[...r.querySelectorAll("td")].map(x=>x.textContent.trim()))
+ .filter(c=>c.length===3).map(c=>({name:c[0],rarity:c[1],biomes:c[2]}));
+}
+async function getSpecies(name){
+ let key=name.toLowerCase().replaceAll(" ","-").replaceAll("'","");
+ try{
+  const p=await fetch("https://pokeapi.co/api/v2/pokemon/"+key).then(r=>r.ok?r.json():null);
+  const s=await fetch("https://pokeapi.co/api/v2/pokemon-species/"+key).then(r=>r.ok?r.json():null);
+  return {types:(p?.types||[]).sort((a,b)=>a.slot-b.slot).map(x=>x.type.name.replace(/^./,m=>m.toUpperCase())),groups:(s?.egg_groups||[]).map(x=>x.name.replaceAll("-"," ").replace(/^./,m=>m.toUpperCase()))};
+ }catch(e){return {types:[],groups:[]};}
+}
+function chooseBait(types,groups){
+ for(const t of types) if(TYPE_BAIT[t]) return {bait:TYPE_BAIT[t],kind:"Type"};
+ for(const g of groups){const k=g.toLowerCase();if(EGG_BAIT[k]) return {bait:EGG_BAIT[k],kind:"Egg Group"};}
+ return {bait:"Matching bait",kind:"Type/Egg"};
+}
+async function main(){
+ try{
+  const text=await fetch(SOURCE).then(r=>r.text());
+  const rows=parseRows(text), byName=new Map();
+  rows.forEach(r=>{if(!byName.has(r.name))byName.set(r.name,[]);byName.get(r.name).push(r);});
+  const names=[...byName.keys()], details=new Map();
+  document.getElementById("status").textContent=`Loaded ${rows.length} spawn rows for ${names.length} species. Adding recipe data…`;
+  for(let i=0;i<names.length;i+=12){
+   const vals=await Promise.all(names.slice(i,i+12).map(async n=>[n,await getSpecies(n)]));
+   vals.forEach(([n,d])=>details.set(n,d));
+   document.getElementById("status").textContent=`Loaded ${rows.length} spawn rows for ${names.length} species. Recipe data ${Math.min(i+12,names.length)}/${names.length}…`;
+  }
+  const all=[];
+  for(const [name,rs] of byName){
+   const d=details.get(name)||{types:[],groups:[]};
+   for(const r of rs) all.push({...r,...d});
+  }
+  const tbody=document.querySelector("#spawn tbody");
+  function render(q=""){
+   q=q.toLowerCase(); tbody.innerHTML="";
+   const matches=all.filter(x=>(x.name+" "+x.rarity+" "+x.biomes+" "+x.types.join(" ")+" "+x.groups.join(" ")).toLowerCase().includes(q));
+   const grouped=new Map();
+   matches.forEach(x=>{
+     x.biomes.split(",").map(b=>b.trim()).filter(Boolean).forEach(b=>{
+       if(!grouped.has(b)) grouped.set(b,[]);
+       grouped.get(b).push(x);
+     });
+   });
+   [...grouped.keys()].sort((a,b)=>a.localeCompare(b)).forEach(biome=>{
+     const heading=document.createElement("tr");
+     heading.innerHTML=`<td colspan="8" style="background:#dfe7f1;font-size:16px;font-weight:800;padding:10px;">🌍 ${esc(biome)} — ${grouped.get(biome).length} spawn entries</td>`;
+     tbody.appendChild(heading);
+     grouped.get(biome).sort((a,b)=>a.name.localeCompare(b.name)||a.rarity.localeCompare(b.rarity)).forEach(x=>{
+       const bait=chooseBait(x.types,x.groups);
+       const tr=document.createElement("tr");
+       tr.innerHTML=`<td><b>${esc(x.name)}</b></td><td><span class="badge">${esc(x.rarity)}</span></td><td>${esc(biome)}</td><td>${esc(x.types.join(" / ")||"—")}</td><td>${esc(x.groups.join(" / ")||"—")}</td><td>Starf Berry + Golden Carrot + <b>${esc(bait.bait)}</b></td><td>Golden Carrot + Golden Carrot + Golden Carrot</td><td>3× <b>${esc(bait.bait)}</b> (${esc(bait.kind)})</td>`;
+       tbody.appendChild(tr);
+     });
+   });
+  }
+  render(); document.getElementById("search").addEventListener("input",e=>render(e.target.value));
+  document.getElementById("status").textContent=`Complete: ${rows.length} spawn rows / ${names.length} species loaded.`;
+ }catch(e){
+  document.getElementById("status").textContent="Could not load the live source. Check your internet connection and reload the page.";
+  console.error(e);
+ }
+}
+main();
+</script>
+</body></html>
