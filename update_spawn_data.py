@@ -42,7 +42,7 @@ name_by_species_id={r['id']:r['identifier'] for r in species}
 # Species egg-group ids.
 egg_ids={}
 for r in egg:
-    egg_ids.setdefault(r['species_id'],[]).append(r['type_id'])
+    egg_ids.setdefault(r['species_id'],[]).append(r['egg_group_id'])
 egg_names={r['id']:r['identifier'].replace('-',' ') for r in csv_rows('egg_groups.csv')}
 # Type ids/names.
 type_names={r['id']:r['identifier'].replace('-',' ').title() for r in csv_rows('types.csv')}
