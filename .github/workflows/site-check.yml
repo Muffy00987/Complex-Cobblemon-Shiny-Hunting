@@ -1,0 +1,31 @@
+name: Site Check
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Check JavaScript syntax
+        run: node --check app.js
+      - name: Check updater syntax
+        run: python -m py_compile update_spawn_data.py
+      - name: Check required site files
+        run: |
+          test -s index.html
+          test -s styles.css
+          test -s app.js
+          test -s data/spawn-data.js
+          grep -q 'styles.css' index.html
+          grep -q 'app.js' index.html
+          grep -q 'data/spawn-data.js' index.html
