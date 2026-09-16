@@ -13,6 +13,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: update-cobblemon-spawn-data
+  cancel-in-progress: false
+
 jobs:
   update-spawn-data:
     runs-on: ubuntu-latest
@@ -34,11 +38,15 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          cp data/spawn-data.js "$RUNNER_TEMP/spawn-data.js"
+          git fetch origin main
+          git checkout -B main origin/main
+          cp "$RUNNER_TEMP/spawn-data.js" data/spawn-data.js
+
           if git diff --quiet -- data/spawn-data.js; then
             echo "No spawn data changes."
           else
             git add data/spawn-data.js
             git commit -m "[skip ci] Update spawn data"
-            git pull --rebase origin main
-            git push
+            git push origin HEAD:main
           fi
