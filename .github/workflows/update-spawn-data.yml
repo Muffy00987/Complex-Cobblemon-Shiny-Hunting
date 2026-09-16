@@ -39,5 +39,6 @@ jobs:
           else
             git add data/spawn-data.js
             git commit -m "[skip ci] Update spawn data"
+            git pull --rebase origin main
             git push
           fi
