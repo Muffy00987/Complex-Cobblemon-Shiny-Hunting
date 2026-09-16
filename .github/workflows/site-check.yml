@@ -17,7 +17,9 @@ jobs:
         with:
           python-version: '3.x'
       - name: Check JavaScript syntax
-        run: node --check app.js
+        run: |
+          node --check app.js
+          node --check catch-balls.js
       - name: Check updater syntax
         run: python -m py_compile update_spawn_data.py
       - name: Check required site files
@@ -29,3 +31,30 @@ jobs:
           grep -q 'styles.css' index.html
           grep -q 'app.js' index.html
           grep -q 'data/spawn-data.js' index.html
+          grep -q 'catch-balls.js' index.html
+      - name: Validate page wiring and spawn data
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          html = Path('index.html').read_text(encoding='utf-8')
+          app = Path('app.js').read_text(encoding='utf-8')
+          ids = re.findall(r'\bid="([^"]+)"', html)
+          if len(ids) != len(set(ids)):
+              raise SystemExit('Duplicate HTML ids found')
+          missing = sorted(set(re.findall(r"\$\('([^']+)'\)", app)) - set(ids))
+          if missing:
+              raise SystemExit(f'JavaScript references missing HTML ids: {missing}')
+          PY
+          node <<'NODE'
+          const fs = require('fs');
+          const vm = require('vm');
+          const context = {window: {}};
+          vm.runInNewContext(fs.readFileSync('data/spawn-data.js', 'utf8'), context);
+          const rows = context.window.COBBLEMON_SPAWN_DATA;
+          if (!Array.isArray(rows) || !rows.length) throw new Error('Spawn data is missing or empty');
+          const invalid = rows.filter(row => !row.name || !row.biomes || !row.pokemon_id || !Array.isArray(row.types) || !row.types.length);
+          if (invalid.length) throw new Error(`Invalid spawn rows: ${invalid.length}`);
+          const unsupported = rows.filter(row => /aether|bumblezone/i.test(String(row.biomes)));
+          if (unsupported.length) throw new Error(`Unsupported-dimension rows: ${unsupported.length}`);
+          NODE
