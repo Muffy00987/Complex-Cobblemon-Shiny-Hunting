@@ -113,6 +113,26 @@ rows=parse_spawn(spawn_text)
 if not rows:
     raise RuntimeError('No spawn rows parsed')
 
+# Complex does not currently document access to these optional dimensions.
+# Keep valid Overworld/Nether/End alternatives on mixed rows, but do not show
+# inaccessible Aether or Bumblezone biomes as huntable Complex locations.
+UNSUPPORTED_BIOME_PREFIXES=('#aether:', 'aether:', '#the_bumblezone:', 'the_bumblezone:')
+
+def filter_unsupported_biomes(spawn_rows):
+    kept=[]
+    for row in spawn_rows:
+        biomes=[b.strip() for b in str(row.get('biomes') or '').split(',') if b.strip()]
+        supported=[b for b in biomes if not b.lower().startswith(UNSUPPORTED_BIOME_PREFIXES)]
+        if not supported:
+            continue
+        row['biomes']=', '.join(supported)
+        kept.append(row)
+    return kept
+
+rows=filter_unsupported_biomes(rows)
+if not rows:
+    raise RuntimeError('No Complex-compatible spawn rows remain after biome filtering')
+
 pokemon=csv_rows('pokemon.csv')
 pokemon_types=csv_rows('pokemon_types.csv')
 species=csv_rows('pokemon_species.csv')
