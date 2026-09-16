@@ -15,9 +15,40 @@ function targetBaits(x){const out=[];(x?.types||[]).forEach(t=>{if(TYPE_BAIT[t])
 function preset(g,x){const t=targetBaits(x)[0]?.bait||'';if(g==='balanced')return['Starf Berry','Golden Carrot',t||'Starf Berry'];if(g==='maxshiny')return['Enchanted Golden Apple','Starf Berry',t||'Starf Berry'];if(g==='target')return[t||'Starf Berry',t||'Starf Berry',t||'Starf Berry'];if(g==='rarity')return['Enchanted Golden Apple','Golden Carrot','Golden Carrot'];if(g==='fast')return['Apple','Apple','Sitrus Berry'];if(g==='level')return['Hopo Berry','Hopo Berry','Hopo Berry'];return slots}
 function totals(a){let shiny=1,rarity=0,bite=0,level=0,ability=0;a.filter(Boolean).forEach(n=>{const e=SEASONINGS[n]||{};if(e.shiny)shiny+=e.shiny-1;rarity+=e.rarity||0;bite+=e.bite||0;level+=e.level||0;ability+=e.ability||0});return{shiny,rarity,bite:Math.min(100,bite),level,ability:Math.min(100,ability)}}
 function show(p){['home','builder','items','guide','about','wiki'].forEach(x=>$(x+'Page').classList.toggle('hidden',x!==p));window.scrollTo({top:0,behavior:'smooth'})}function icon(b){return/forest/i.test(b)?'🌲':/ocean/i.test(b)?'🌊':/river/i.test(b)?'💧':/mountain|hill/i.test(b)?'⛰️':/desert|badland/i.test(b)?'🏜️':/floral|flower|cherry/i.test(b)?'🌸':/nether/i.test(b)?'🔥':/end|magical/i.test(b)?'🔮':'◆'}
+let backgroundRequest=0,backgroundTimer=null;
+function biomeBackground(b){
+  const value=String(b||'').toLowerCase();
+  if(!value)return'';
+  if(/nether/.test(value))return'nether';
+  if(/(^|[:_ -])end($|[:_ -])/.test(value))return'end';
+  if(/freez|snow|ice|icy|frozen|cold|tundra/.test(value))return'cold';
+  if(/ocean|river|beach|coast|island|aquatic|water|lake/.test(value))return'water';
+  if(/desert|badland|arid|mesa/.test(value))return'arid';
+  if(/swamp|mangrove|marsh|spooky/.test(value))return'swamp';
+  if(/cave|dripstone|deep.?dark|underground|lush/.test(value))return'cave';
+  if(/floral|flower|cherry|meadow/.test(value))return'floral';
+  if(/forest|jungle|wood|grove|taiga/.test(value))return'forest';
+  return'plains';
+}
+function updateBiomeBackground(b){
+  const category=biomeBackground(b),url=category?`assets/biomes/${category}.webp`:'assets/background.jpg',request=++backgroundRequest,img=new Image();
+  img.onload=()=>{
+    if(request!==backgroundRequest)return;
+    clearTimeout(backgroundTimer);
+    document.body.classList.add('biome-bg-changing');
+    backgroundTimer=setTimeout(()=>{
+      if(request!==backgroundRequest)return;
+      document.body.style.setProperty('--page-background',`url("${url}")`);
+      document.body.dataset.biomeBackground=category||'default';
+      requestAnimationFrame(()=>document.body.classList.remove('biome-bg-changing'));
+    },220);
+  };
+  img.onerror=()=>{if(request===backgroundRequest)document.body.classList.remove('biome-bg-changing')};
+  img.src=url;
+}
 function renderBiomes(){const c={};catalog.forEach(x=>biomes(x).forEach(b=>c[b]=(c[b]||0)+1));$('allBiomeCount').textContent=catalog.length;$('biomeList').innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([b,n])=>`<button class="biomeBtn" data-biome="${esc(b)}"><span>${icon(b)} ${esc(b)}</span><em>${n}</em></button>`).join('');document.querySelectorAll('.biomeBtn').forEach(b=>b.onclick=()=>selectBiome(b.dataset.biome||''))}
 function ambientCandidates(b){const c=b?catalog.filter(x=>biomes(x).includes(b)):catalog,dark=/nether|end|cave|swamp|dark|magical/i.test(b||'');return c.filter(x=>x.pokemon_id).sort((a,z)=>{const score=x=>(x.types||[]).reduce((s,t)=>s+(dark&&['Ghost','Dark','Poison'].includes(t)?6:!dark&&['Fairy','Grass','Normal'].includes(t)?4:0),0);return score(z)-score(a)||dex(a)-dex(z)})}function refreshAmbient(b){clearInterval(ambientTimer);let off=0;const draw=()=>{const c=ambientCandidates(b);if(!c.length)return;const p=[0,1,2,3].map(i=>c[(off+i)%c.length]);off=(off+2)%c.length;$('ambient').innerHTML=p.map((x,i)=>`<div class="amb ${['a','b','c','d'][i]}"><img src="${art(x.pokemon_id)||sprite(x)}" alt=""></div>`).join('');requestAnimationFrame(()=>document.querySelectorAll('.amb').forEach((n,i)=>setTimeout(()=>n.classList.add('show'),80*i)))};draw();ambientTimer=setInterval(draw,10000)}
-function selectBiome(b){$('biomeFilter').value=b;document.querySelectorAll('.biomeBtn').forEach(x=>x.classList.toggle('active',(x.dataset.biome||'')===b));currentPage=1;refreshAmbient(b);renderList()}
+function selectBiome(b){$('biomeFilter').value=b;document.querySelectorAll('.biomeBtn').forEach(x=>x.classList.toggle('active',(x.dataset.biome||'')===b));currentPage=1;updateBiomeBackground(b);refreshAmbient(b);renderList()}
 function filtered(){const q=$('search').value.toLowerCase().trim(),bf=$('biomeFilter').value,rf=$('rarityFilter').value,tf=$('typeFilter').value,ef=$('eggFilter').value,ff=$('formFilter').value,sm=$('sortMode').value;const r=catalog.filter(x=>(!q||x._search.includes(q))&&(!bf||biomes(x).includes(bf))&&(!rf||(x.rarities||[x.rarity]).some(r=>String(r).toLowerCase()===rf.toLowerCase()))&&(!tf||(x.types||[]).includes(tf))&&(!ef||(x.groups||[]).includes(ef))&&(!ff||(x.forms||[]).length>1));r.sort((a,b)=>sm==='name'?a.name.localeCompare(b.name):sm==='rarity'?Math.min(...(a.rarities||[a.rarity]).map(rank))-Math.min(...(b.rarities||[b.rarity]).map(rank))||dex(a)-dex(b):dex(a)-dex(b));return r}
 function renderList(){const r=filtered(),total=Math.max(1,Math.ceil(r.length/pageSize));currentPage=Math.min(currentPage,total);const page=r.slice((currentPage-1)*pageSize,currentPage*pageSize),saved=getChecklist();$('pokemonGrid').classList.toggle('compact',compact);$('pokemonGrid').innerHTML=page.length?page.map(x=>`<article class="card"><button class="star" data-star="${esc(x.name)}" aria-label="Checklist">${saved.has(x.name)?'★':'☆'}</button><div class="sprite" data-view="${esc(x.name)}"><img loading="lazy" decoding="async" src="${art(x.pokemon_id)||sprite(x)}" data-fallback="${sprite(x)}" alt="${esc(x.name)}"></div><div class="dex">#${String(dex(x)).padStart(4,'0')}</div><div class="name">${esc(x.name)}</div><div class="types">${(x.types||[]).map(t=>`<span class="type">${esc(t)}</span>`).join('')}</div><div class="actions"><button data-view="${esc(x.name)}">Details</button><button class="recipe" data-build="${esc(x.name)}">Recipe</button></div></article>`).join(''):'<div class="emptyState">No Pokémon match these filters. Try clearing one or more filters.</div>';document.querySelectorAll('.sprite img').forEach(img=>img.onerror=()=>{if(img.dataset.fallback&&img.src!==img.dataset.fallback){img.src=img.dataset.fallback;img.dataset.fallback=''}});document.querySelectorAll('[data-view]').forEach(e=>e.onclick=()=>{current=catalog.find(v=>v.name===e.dataset.view);renderSelected();openPokemon(current)});document.querySelectorAll('[data-build]').forEach(e=>e.onclick=()=>{current=catalog.find(v=>v.name===e.dataset.build);slots=preset('balanced',current);renderBuilder();show('builder')});document.querySelectorAll('[data-star]').forEach(e=>e.onclick=()=>{const s=getChecklist();s.has(e.dataset.star)?s.delete(e.dataset.star):s.add(e.dataset.star);saveChecklist(s);renderList()});$('status').innerHTML=`Showing <strong>${r.length}</strong> Pokémon <span class="muted">• page ${r.length?currentPage:0} of ${r.length?total:0}</span>`;renderPages(total)}
 function renderPages(total){const p=$('pagination');p.innerHTML='';if(total<=1)return;const add=(l,n,a=false)=>{const b=document.createElement('button');b.textContent=l;b.classList.toggle('active',a);b.onclick=()=>{currentPage=n;renderList();$('pokemonArea').scrollIntoView({behavior:'smooth',block:'start'})};p.appendChild(b)};if(currentPage>1)add('←',currentPage-1);[1,currentPage-1,currentPage,currentPage+1,total].filter((v,i,a)=>v>=1&&v<=total&&a.indexOf(v)===i).sort((a,b)=>a-b).forEach(n=>add(n,n,n===currentPage));if(currentPage<total)add('→',currentPage+1)}
