@@ -300,6 +300,14 @@ for k in types_by_pokemon:
 sp_by_key={norm(v):int(k) for k,v in name_by_species_id.items()}
 pokemon_by_key={norm(p['identifier']):p for p in pokemon}
 
+# The spawn table sometimes removes punctuation and separators (for example
+# "Mrmime", "Hooh", "Jangmoo", and "Brutebonnet"). Add compact lookup keys so
+# those display names still resolve to the canonical PokéAPI species/form.
+for lookup_key,species_id in list(sp_by_key.items()):
+    sp_by_key.setdefault(lookup_key.replace('-',''),species_id)
+for lookup_key,pokemon_row in list(pokemon_by_key.items()):
+    pokemon_by_key.setdefault(lookup_key.replace('-',''),pokemon_row)
+
 # All known PokeAPI visual forms/variants for each species.
 forms_by_species={}
 for p in pokemon:
@@ -322,7 +330,10 @@ ALIASES={
 }
 for r in rows:
     key=norm(r['name'])
-    sid=sp_by_key.get(ALIASES.get(key,key))
+    lookup_key=ALIASES.get(key,key)
+    sid=sp_by_key.get(lookup_key)
+    if sid is None:
+        sid=sp_by_key.get(lookup_key.replace('-',''))
     if sid is None:
         # Try dropping common regional/form suffixes only when a base species exists.
         for suffix in ('-alolan','-galarian','-hisuian','-paldean'):
@@ -331,8 +342,7 @@ for r in rows:
     if sid is not None:
         form=pokemon_by_key.get(key)
         if form is None:
-            # Try a direct identifier lookup after removing a few display-only separators.
-            form=pokemon_by_key.get(norm(r['name']))
+            form=pokemon_by_key.get(key.replace('-',''))
         if form is not None:
             r['types']=types_by_pokemon.get(form['id'],[])
             r['pokemon_id']=int(form['id'])
@@ -343,6 +353,7 @@ for r in rows:
             base_p=next((p for p in pokemon if int(p['species_id'])==int(sid) and p.get('is_default')=='1'),None)
             if base_p is not None:
                 r['pokemon_id']=int(base_p['id'])
+                r['types']=types_by_pokemon.get(base_p['id'],[])
         r['groups']=[egg_names.get(t,str(t)).replace('-',' ').title() for t in egg_ids.get(str(sid),[])]
         r['forms']=forms_by_species.get(str(sid),forms_by_species.get(int(sid),[]))
         r['catch_rate']=capture_rate_by_species.get(int(sid))
