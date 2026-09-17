@@ -28,9 +28,11 @@ jobs:
           test -s styles.css
           test -s app.js
           test -s data/spawn-data.js
+          test -s data/biome-backgrounds.js
           grep -q 'styles.css' index.html
           grep -q 'app.js' index.html
           grep -q 'data/spawn-data.js' index.html
+          grep -q 'data/biome-backgrounds.js' index.html
           grep -q 'catch-balls.js' index.html
       - name: Validate page wiring and spawn data
         run: |
@@ -51,10 +53,18 @@ jobs:
           const vm = require('vm');
           const context = {window: {}};
           vm.runInNewContext(fs.readFileSync('data/spawn-data.js', 'utf8'), context);
+          vm.runInNewContext(fs.readFileSync('data/biome-backgrounds.js', 'utf8'), context);
           const rows = context.window.COBBLEMON_SPAWN_DATA;
           if (!Array.isArray(rows) || !rows.length) throw new Error('Spawn data is missing or empty');
           const invalid = rows.filter(row => !row.name || !row.biomes || !row.pokemon_id || !Array.isArray(row.types) || !row.types.length);
           if (invalid.length) throw new Error(`Invalid spawn rows: ${invalid.length}`);
           const unsupported = rows.filter(row => /aether|bumblezone/i.test(String(row.biomes)));
           if (unsupported.length) throw new Error(`Unsupported-dimension rows: ${unsupported.length}`);
+          const biomes = [...new Set(rows.flatMap(row => String(row.biomes).split(',').map(value => value.trim()).filter(Boolean)))];
+          const backgrounds = context.window.COBBLEMON_BIOME_BACKGROUNDS || {};
+          const missingBackgrounds = biomes.filter(biome => !backgrounds[biome]);
+          if (missingBackgrounds.length) throw new Error(`Biomes missing backgrounds: ${missingBackgrounds.join(', ')}`);
+          const missingFiles = biomes.filter(biome => !fs.existsSync(backgrounds[biome]));
+          if (missingFiles.length) throw new Error(`Missing background files: ${missingFiles.join(', ')}`);
+          if (new Set(Object.values(backgrounds)).size !== biomes.length) throw new Error('Biome backgrounds are not one-to-one');
           NODE

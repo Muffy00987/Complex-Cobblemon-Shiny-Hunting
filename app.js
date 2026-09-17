@@ -15,23 +15,10 @@ function targetBaits(x){const out=[];(x?.types||[]).forEach(t=>{if(TYPE_BAIT[t])
 function preset(g,x){const t=targetBaits(x)[0]?.bait||'';if(g==='balanced')return['Starf Berry','Golden Carrot',t||'Starf Berry'];if(g==='maxshiny')return['Enchanted Golden Apple','Starf Berry',t||'Starf Berry'];if(g==='target')return[t||'Starf Berry',t||'Starf Berry',t||'Starf Berry'];if(g==='rarity')return['Enchanted Golden Apple','Golden Carrot','Golden Carrot'];if(g==='fast')return['Apple','Apple','Sitrus Berry'];if(g==='level')return['Hopo Berry','Hopo Berry','Hopo Berry'];return slots}
 function totals(a){let shiny=1,rarity=0,bite=0,level=0,ability=0;a.filter(Boolean).forEach(n=>{const e=SEASONINGS[n]||{};if(e.shiny)shiny+=e.shiny-1;rarity+=e.rarity||0;bite+=e.bite||0;level+=e.level||0;ability+=e.ability||0});return{shiny,rarity,bite:Math.min(100,bite),level,ability:Math.min(100,ability)}}
 function show(p){['home','builder','items','guide','about','wiki'].forEach(x=>$(x+'Page').classList.toggle('hidden',x!==p));window.scrollTo({top:0,behavior:'smooth'})}function icon(b){return/forest/i.test(b)?'🌲':/ocean/i.test(b)?'🌊':/river/i.test(b)?'💧':/mountain|hill/i.test(b)?'⛰️':/desert|badland/i.test(b)?'🏜️':/floral|flower|cherry/i.test(b)?'🌸':/nether/i.test(b)?'🔥':/end|magical/i.test(b)?'🔮':'◆'}
-let backgroundRequest=0,backgroundTimer=null;
-function biomeBackground(b){
-  const value=String(b||'').toLowerCase();
-  if(!value)return'';
-  if(/nether/.test(value))return'nether';
-  if(/(^|[:_ -])end($|[:_ -])/.test(value))return'end';
-  if(/freez|snow|ice|icy|frozen|cold|tundra/.test(value))return'cold';
-  if(/ocean|river|beach|coast|island|aquatic|water|lake/.test(value))return'water';
-  if(/desert|badland|arid|mesa/.test(value))return'arid';
-  if(/swamp|mangrove|marsh|spooky/.test(value))return'swamp';
-  if(/cave|dripstone|deep.?dark|underground|lush/.test(value))return'cave';
-  if(/floral|flower|cherry|meadow/.test(value))return'floral';
-  if(/forest|jungle|wood|grove|taiga/.test(value))return'forest';
-  return'plains';
-}
+const BIOME_BACKGROUNDS=Object.freeze(window.COBBLEMON_BIOME_BACKGROUNDS||{});let backgroundRequest=0,backgroundTimer=null;
+function biomeBackground(b){return BIOME_BACKGROUNDS[String(b||'')]||''}
 function updateBiomeBackground(b){
-  const category=biomeBackground(b),url=category?`assets/biomes/${category}.webp`:'assets/background.jpg',request=++backgroundRequest,img=new Image();
+  const background=biomeBackground(b),url=background||'assets/background.jpg',request=++backgroundRequest,img=new Image();
   img.onload=()=>{
     if(request!==backgroundRequest)return;
     clearTimeout(backgroundTimer);
@@ -39,7 +26,7 @@ function updateBiomeBackground(b){
     backgroundTimer=setTimeout(()=>{
       if(request!==backgroundRequest)return;
       document.body.style.setProperty('--page-background',`url("${url}")`);
-      document.body.dataset.biomeBackground=category||'default';
+      document.body.dataset.biomeBackground=b||'default';
       requestAnimationFrame(()=>document.body.classList.remove('biome-bg-changing'));
     },220);
   };
