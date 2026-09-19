@@ -15,7 +15,13 @@ function targetBaits(x){const out=[];(x?.types||[]).forEach(t=>{if(TYPE_BAIT[t])
 function preset(g,x){const t=targetBaits(x)[0]?.bait||'';if(g==='balanced')return['Starf Berry','Golden Carrot',t||'Starf Berry'];if(g==='maxshiny')return['Enchanted Golden Apple','Starf Berry',t||'Starf Berry'];if(g==='target')return[t||'Starf Berry',t||'Starf Berry',t||'Starf Berry'];if(g==='rarity')return['Enchanted Golden Apple','Golden Carrot','Golden Carrot'];if(g==='fast')return['Apple','Apple','Sitrus Berry'];if(g==='level')return['Hopo Berry','Hopo Berry','Hopo Berry'];return slots}
 function totals(a){let shiny=1,rarity=0,bite=0,level=0,ability=0;a.filter(Boolean).forEach(n=>{const e=SEASONINGS[n]||{};if(e.shiny)shiny+=e.shiny-1;rarity+=e.rarity||0;bite+=e.bite||0;level+=e.level||0;ability+=e.ability||0});return{shiny,rarity,bite:Math.min(100,bite),level,ability:Math.min(100,ability)}}
 function show(p){['home','builder','items','guide','about','wiki'].forEach(x=>$(x+'Page').classList.toggle('hidden',x!==p));window.scrollTo({top:0,behavior:'smooth'})}function icon(b){return/forest/i.test(b)?'🌲':/ocean/i.test(b)?'🌊':/river/i.test(b)?'💧':/mountain|hill/i.test(b)?'⛰️':/desert|badland/i.test(b)?'🏜️':/floral|flower|cherry/i.test(b)?'🌸':/nether/i.test(b)?'🔥':/end|magical/i.test(b)?'🔮':'◆'}
-const BIOME_BACKGROUNDS=Object.freeze(window.COBBLEMON_BIOME_BACKGROUNDS||{});\nconst BIOME_ALIASES=Object.freeze(window.COBBLEMON_BIOME_ALIASES||{});let backgroundRequest=0,backgroundTimer=null;\nfunction biomeTags(b){return BIOME_ALIASES[String(b||'')]||[String(b||'')]}\nfunction matchesBiome(x,b){return!b||biomeTags(b).some(tag=>biomes(x).includes(tag))}\nfunction biomeLabel(b){const raw=String(b||''),name=raw.includes(':')?raw.split(':').slice(1).join(':'):raw;return name.split('/').pop().replace(/[_-]+/g,' ').replace(/\\b\\w/g,c=>c.toUpperCase())}\nfunction biomeBackground(b){const direct=BIOME_BACKGROUNDS[String(b||'')];if(direct)return direct;return biomeTags(b).map(tag=>BIOME_BACKGROUNDS[tag]).find(Boolean)||''}
+const BIOME_BACKGROUNDS=Object.freeze(window.COBBLEMON_BIOME_BACKGROUNDS||{});
+const BIOME_ALIASES=Object.freeze(window.COBBLEMON_BIOME_ALIASES||{});
+let backgroundRequest=0,backgroundTimer=null;
+function biomeTags(b){return BIOME_ALIASES[String(b||'')]||[String(b||'')]}
+function matchesBiome(x,b){return!b||biomeTags(b).some(tag=>biomes(x).includes(tag))}
+function biomeLabel(b){const raw=String(b||''),name=raw.includes(':')?raw.split(':').slice(1).join(':'):raw;return name.split('/').pop().replace(/[_-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
+function biomeBackground(b){const direct=BIOME_BACKGROUNDS[String(b||'')];if(direct)return direct;return biomeTags(b).map(tag=>BIOME_BACKGROUNDS[tag]).find(Boolean)||''}
 function updateBiomeBackground(b){
   const background=biomeBackground(b),url=background||'assets/background.jpg',request=++backgroundRequest,img=new Image();
   img.onload=()=>{
